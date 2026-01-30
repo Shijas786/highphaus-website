@@ -951,6 +951,10 @@ function App() {
 
       <section className="workshop-zone">
         <div className="workshop-wrapper">
+          <AdvancedDesigner id="workshopBg" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode} hideLabel={true}>
+            <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </AdvancedDesigner>
+
           <AdvancedDesigner id="pegboard" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
             <div className="pegboard-overlay" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'visible' }}>
               <button
@@ -973,18 +977,25 @@ function App() {
                     return (
                       <motion.div
                         key={`${work.id}-${i}`}
-                        initial={{ opacity: 0, x: i === 0 ? '-100%' : i === 2 ? '100%' : '0%' }}
+                        initial={{ opacity: 0, x: i === 0 ? '-100%' : i === 2 ? '100%' : '0%', y: '-50%' }}
                         animate={{
                           opacity: isActive ? 1 : 0.4,
                           scale: isActive ? 1 : 0.75,
                           x: i === 0 ? '-60%' : i === 2 ? '60%' : '0%',
+                          y: '-50%',
                           zIndex: isActive ? 10 : 5,
                           rotate: i === 0 ? -12 : i === 2 ? 12 : -1
                         }}
                         exit={{ opacity: 0 }}
+                        drag={isActive ? "x" : false}
+                        dragConstraints={{ left: 0, right: 0 }}
+                        onDragEnd={(e, info) => {
+                          if (info.offset.x > 80) prevWork();
+                          else if (info.offset.x < -80) nextWork();
+                        }}
                         transition={{ type: 'spring', stiffness: 200, damping: 25 }}
                         className={`work-card ${isActive ? 'active' : 'side'}`}
-                        style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', marginLeft: '-150px', marginTop: '-200px' }} // Centering logic
+                        style={{ position: 'absolute', left: '50%', top: '50%', transformOrigin: 'center center', marginLeft: '-150px', marginTop: '-200px' }}
                       >
                         <div className="card-pin"></div>
                         <div className="client-tag">{work.project}</div>
@@ -1016,14 +1027,6 @@ function App() {
               </button>
             </div>
           </AdvancedDesigner>
-
-
-          <AdvancedDesigner id="workshopBg" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode} hideLabel={true}>
-            <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          </AdvancedDesigner>
-
-          {/* New Interactive Highlights */}
-
 
           <AdvancedDesigner id="laptopVideo" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
             <div style={{ width: '100%', height: '100%', overflow: 'hidden', background: '#000' }}>
@@ -1093,7 +1096,7 @@ function App() {
           )}
         </div>
       </Draggable>
-    </div>
+    </div >
   )
 }
 
