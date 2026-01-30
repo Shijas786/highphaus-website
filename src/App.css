@@ -1,11 +1,19 @@
+html,
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  overflow-x: hidden;
   font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw;
+  /* Added as per instruction */
+  position: relative;
   margin: 0;
+  /* From original body */
   padding: 0;
-  width: 100%;
+  /* From original body */
 }
 
 .app {
@@ -13,6 +21,7 @@ body {
   overflow-x: hidden;
   /* Default for desktop */
   position: relative;
+  max-width: 100vw;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -26,9 +35,11 @@ body {
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
-  overflow-x: auto;
-  /* Allow scrolling on mobile */
+  overflow-x: hidden !important;
+  /* prevent horizontal scroll leak */
   overflow-y: auto;
+  width: 100%;
+  touch-action: pan-y;
 }
 
 .gradient-bg {
@@ -93,7 +104,7 @@ body {
   width: 100%;
   height: 100vh;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Cloud Transition Mask at the bottom of the video */
@@ -121,6 +132,7 @@ body {
   object-fit: cover;
   filter: contrast(1.1) saturate(1.1) brightness(0.9);
 }
+
 
 .hero {
   position: relative;
@@ -261,12 +273,11 @@ body {
 }
 
 .hero-content h1 {
-  font-size: clamp(2rem, 4.5vw, 3.8rem);
-  line-height: 1.1;
+  font-size: clamp(1.75rem, 5vw, 3.8rem);
+  line-height: 1.2;
   margin-bottom: 2rem;
   color: #fff9f0;
-  /* Warm Ivory to match backlight */
-  padding-bottom: 0.1em;
+  padding: 0 1rem;
   opacity: 0;
   animation: fadeInUp 1s ease-out 3s forwards;
 
@@ -296,12 +307,12 @@ body {
 }
 
 .hero-content p span {
-  background: rgba(10, 10, 10, 0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(10, 10, 10, 0.3);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   padding: 0.3rem 0.6rem;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -473,7 +484,7 @@ body {
 .big-headline {
   font-family: serif;
   /* Using standard serif for the editorial look */
-  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  font-size: clamp(2rem, 4.5vw, 4rem);
   color: #334155;
   /* Refined charcoal gray */
   line-height: 1.1;
@@ -1084,8 +1095,8 @@ body {
 
 @media (max-width: 1024px) {
   .founder-circle {
-    width: 80px;
-    height: 80px;
+    width: 110px;
+    height: 110px;
     flex-shrink: 0;
   }
 
@@ -1123,15 +1134,27 @@ body {
 .workshop-zone {
   position: relative;
   width: 100%;
-  padding: 10vw 0;
+  height: 100vh;
   background-color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
   z-index: 30;
+  touch-action: pan-y;
 }
 
+.workshop-zone * {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.light-interaction-area {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* Standard workshop wrapper styles */
 .workshop-wrapper {
   position: relative;
   width: 95%;
@@ -1143,7 +1166,7 @@ body {
   width: 100%;
   height: auto;
   display: block;
-  z-index: 25;
+  z-index: 1;
   position: relative;
   pointer-events: none;
   /* Let clicks pass through to the board underneath */
@@ -1295,10 +1318,13 @@ body {
 
 @media (max-width: 768px) {
   .pegboard-overlay {
-    width: 90%;
-    left: 5%;
-    height: 50%;
-    top: 20%;
+    /* No longer needs manual positioning, it's relative to workshopBg */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    --peg-scale: 0.6;
+    /* Scale papers down on mobile */
   }
 }
 
@@ -1314,20 +1340,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0d0d0d;
-  background-image:
-    radial-gradient(rgba(255, 255, 255, 0.15) 1.5px, transparent 1.5px),
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 24px 24px, 120px 120px, 120px 120px;
-  background-position: center;
-  box-shadow:
-    inset 0 0 100px rgba(0, 0, 0, 0.9),
-    inset 0 0 20px rgba(255, 255, 255, 0.02),
-    0 25px 60px rgba(0, 0, 0, 0.7);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   z-index: 10;
+  background: transparent;
+  /* Now using the image's board */
+  pointer-events: none;
+  /* Let clicks fall through to designers if needed, but carousel children have pointer-events: auto */
 }
 
 .pegboard-content {
@@ -1336,7 +1355,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
+  touch-action: none;
 }
 
 .work-card {
@@ -1643,6 +1663,23 @@ body {
     padding: 10vh 0 !important;
   }
 
+  .hero-section h1 {
+    font-size: 2.2rem !important;
+    line-height: 1.2 !important;
+    padding: 0 1rem;
+  }
+
+  .hero-section p {
+    font-size: 1rem !important;
+    max-width: 90% !important;
+    margin: 1rem auto !important;
+  }
+
+  .sky-content-container h2 {
+    font-size: 1.8rem !important;
+    line-height: 1.3 !important;
+  }
+
   .founders-horizontal-row {
     flex-wrap: nowrap !important;
     overflow-x: auto;
@@ -1658,14 +1695,20 @@ body {
   }
 
   .founder-circle {
-    width: 120px !important;
-    height: 120px !important;
+    width: 150px !important;
+    height: 150px !important;
     flex-shrink: 0;
-    margin-right: 15px;
+    margin-right: 20px;
   }
 
   .workshop-zone {
     overflow: hidden;
+    --peg-scale: 0.82;
+  }
+
+  .work-card {
+    width: clamp(240px, 70vw, 320px) !important;
+    min-height: 220px !important;
   }
 
   .advanced-designable {

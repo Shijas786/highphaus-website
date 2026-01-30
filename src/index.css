@@ -23,6 +23,7 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   font-family: var(--font-main);
   background-color: var(--color-bg);
@@ -30,6 +31,11 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  touch-action: pan-y;
+  overscroll-behavior-x: none;
 }
 
 h1,

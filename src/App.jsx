@@ -18,6 +18,11 @@ const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, d
     <Draggable
       nodeRef={nodeRef}
       position={{ x: layout.x, y: layout.y }}
+      onStart={(e) => {
+        if (designMode && !layout.locked) {
+          e.stopPropagation();
+        }
+      }}
       onStop={(e, data) => handleUIDrag(id, { ...layout, x: data.x, y: data.y })}
       disabled={!designMode || isResizing}
       cancel=".resizer-handle"
@@ -70,12 +75,17 @@ const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, d
   )
 }
 
-const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabel = false, selected = false, locked = false }) => {
+const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabel = false, selected = false, locked = false, customStyle = {} }) => {
   const elementRef = useRef(null)
   return (
     <Draggable
       nodeRef={elementRef}
       position={position}
+      onStart={(e) => {
+        if (designMode && !locked) {
+          e.stopPropagation();
+        }
+      }}
       onStop={(e, data) => handleUIDrag(id, data)}
       disabled={!designMode || locked}
     >
@@ -88,7 +98,8 @@ const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabe
           cursor: designMode ? (locked ? 'not-allowed' : 'move') : 'inherit',
           pointerEvents: designMode && locked ? 'none' : 'auto',
           outline: designMode && selected ? '2px solid #00ff00' : 'none',
-          opacity: designMode && locked ? 0.6 : 1
+          opacity: designMode && locked ? 0.6 : 1,
+          ...customStyle
         }}
       >
         {children}
@@ -106,7 +117,12 @@ const ThrowablePillow = ({ id, src, initialPos, designMode, handleUIDrag, lights
 
   return (
     <motion.div
-      drag={designMode ? true : "x"}
+      drag={true}
+      onPointerDown={(e) => {
+        if (designMode) {
+          e.stopPropagation();
+        }
+      }}
       dragMomentum={!designMode}
       dragTransition={{ bounceStiffness: 100, bounceDamping: 15 }}
       whileTap={{ scale: 1.1, rotate: 5 }}
@@ -198,6 +214,21 @@ function App() {
   const [scrollY, setScrollY] = useState(0)
 
 
+  // --- Workshop Scaling Engine ---
+  const boardWidth = 1725;
+  const boardHeight = 1131;
+  const [boardScale, setBoardScale] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const s = Math.max(window.innerWidth / boardWidth, window.innerHeight / boardHeight);
+      setBoardScale(s);
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Designer Mode State & Selection
   const [designMode, setDesignMode] = useState(false)
   const [mobilePreview, setMobilePreview] = useState(false)
@@ -209,8 +240,8 @@ function App() {
       "id": "c1",
       "src": "/cloud_new_1.png",
       "className": "c1",
-      "x": 236,
-      "y": 14
+      "x": 115.33333333333331,
+      "y": -12.666666666666742
     },
     {
       "id": "c3",
@@ -223,15 +254,15 @@ function App() {
       "id": "c4",
       "src": "/cloud_new_1.png",
       "className": "c4",
-      "x": 552,
-      "y": 62
+      "x": 467.33333333333314,
+      "y": 27.999999999999943
     },
     {
       "id": "c6",
       "src": "/cloud_new_3.png",
       "className": "c6",
-      "x": 134,
-      "y": 274
+      "x": 606.3333333333335,
+      "y": 2.3333333333332575
     },
     {
       "id": "c3_copy_1769687040434",
@@ -244,8 +275,8 @@ function App() {
       "id": "c6_copy_1769688285584",
       "src": "/cloud_new_3.png",
       "className": "c6",
-      "x": 697,
-      "y": 279
+      "x": -57.66666666666676,
+      "y": 12.6666666666668
     },
     {
       "id": "c4_copy_1769690562836",
@@ -258,8 +289,8 @@ function App() {
       "id": "c4_copy_1769690583619",
       "src": "/cloud_new_1.png",
       "className": "c4",
-      "x": 40,
-      "y": 59
+      "x": 389.99999999999994,
+      "y": 30.666666666666686
     },
     {
       "id": "c4_copy_1769690757189",
@@ -275,8 +306,8 @@ function App() {
       "id": "c1",
       "src": "/cloud_new_1.png",
       "className": "c1",
-      "x": 236,
-      "y": 14
+      "x": 115.33333333333331,
+      "y": -12.666666666666742
     },
     {
       "id": "c3",
@@ -289,15 +320,15 @@ function App() {
       "id": "c4",
       "src": "/cloud_new_1.png",
       "className": "c4",
-      "x": 552,
-      "y": 62
+      "x": 467.33333333333314,
+      "y": 27.999999999999943
     },
     {
       "id": "c6",
       "src": "/cloud_new_3.png",
       "className": "c6",
-      "x": 134,
-      "y": 274
+      "x": 606.3333333333335,
+      "y": 2.3333333333332575
     },
     {
       "id": "c3_copy_1769687040434",
@@ -310,8 +341,8 @@ function App() {
       "id": "c6_copy_1769688285584",
       "src": "/cloud_new_3.png",
       "className": "c6",
-      "x": 697,
-      "y": 279
+      "x": -57.66666666666676,
+      "y": 12.6666666666668
     },
     {
       "id": "c4_copy_1769690562836",
@@ -324,8 +355,8 @@ function App() {
       "id": "c4_copy_1769690583619",
       "src": "/cloud_new_1.png",
       "className": "c4",
-      "x": 40,
-      "y": 59
+      "x": 389.99999999999994,
+      "y": 30.666666666666686
     },
     {
       "id": "c4_copy_1769690757189",
@@ -344,12 +375,12 @@ function App() {
   // --- UI Elements Layout State ---
   const desktopUiLayout = {
     "heroTitle": {
-      "x": 13,
-      "y": -154
+      "x": 12,
+      "y": -126
     },
     "heroPara": {
-      "x": 11,
-      "y": -169
+      "x": 32,
+      "y": -119
     },
     "heroBtn": {
       "x": 0,
@@ -368,16 +399,17 @@ function App() {
       "y": 0
     },
     "lightSwitch": {
-      "x": 1085,
-      "y": -152
+      "x": 648,
+      "y": 61,
+      "z": 9999
     },
     "pillow1": {
-      "x": -308.79296875,
-      "y": 18.9765625
+      "x": -242.3515625,
+      "y": 13.23046875
     },
     "pillow2": {
-      "x": -228.90234375,
-      "y": 40.80078125
+      "x": -190.3203125,
+      "y": 21.421875
     },
     "founder1": {
       "x": 0,
@@ -401,10 +433,10 @@ function App() {
       "y": 0
     },
     "pegboard": {
-      "x": 521,
-      "y": -21,
-      "w": 594,
-      "h": 518,
+      "x": 1050,
+      "y": 480,
+      "w": 644,
+      "h": 892,
       "locked": false
     },
     "labNote": {
@@ -432,8 +464,8 @@ function App() {
       "h": 148
     },
     "workshopBg": {
-      "x": -183,
-      "y": -106,
+      "x": -51,
+      "y": -82,
       "w": 1725,
       "h": 1131,
       "locked": false
@@ -446,42 +478,43 @@ function App() {
 
   const mobileUiLayout = {
     "heroTitle": {
-      "x": 13,
-      "y": -154
+      "x": -9.333333333333371,
+      "y": -32.999999999999986
     },
     "heroPara": {
-      "x": 11,
-      "y": -169
+      "x": -3.6666666666668277,
+      "y": -57.999999999999986
     },
     "heroBtn": {
       "x": 0,
       "y": 0
     },
     "skyTitle": {
-      "x": -25,
-      "y": 228
+      "x": 25.666666666666572,
+      "y": 62.333333333333314
     },
     "skyPara": {
-      "x": -4,
-      "y": 358
+      "x": 24,
+      "y": 133.66666666666652
     },
     "serviceSlider": {
       "x": 0,
       "y": 0
     },
     "lightSwitch": {
-      "x": 1085,
-      "y": -152
+      "x": 345.33333333333337,
+      "y": -16.333333333333314,
+      "z": 9999
     },
     "pillow1": {
-      "x": -140,
+      "x": -100,
       "y": 20,
-      "size": 180
+      "size": 90
     },
     "pillow2": {
-      "x": 80,
-      "y": 50,
-      "size": 180
+      "x": -97.33333333333337,
+      "y": 17.333333333333314,
+      "size": 90
     },
     "founder1": {
       "x": 0,
@@ -505,10 +538,10 @@ function App() {
       "y": 0
     },
     "pegboard": {
-      "x": 20,
-      "y": 50,
-      "w": 390,
-      "h": 500,
+      "x": 1250,
+      "y": 480,
+      "w": 600,
+      "h": 800,
       "locked": false
     },
     "labNote": {
@@ -543,8 +576,8 @@ function App() {
       "locked": true
     },
     "foundersContainer": {
-      "x": 0,
-      "y": 0
+      "x": 123.6666666666668,
+      "y": 1
     }
   }
 
@@ -707,6 +740,105 @@ function App() {
 
 
 
+  // Helpers for workshop section
+  const renderLaptopIframe = () => (
+    <iframe
+      width="100%"
+      height="100%"
+      src="https://www.youtube.com/embed/wnHW6o8WMas?autoplay=0&mute=0&controls=1&modestbranding=1"
+      title="Laptop Screen Video"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    ></iframe>
+  )
+
+  const renderPegboardContent = () => (
+    <div className="pegboard-overlay">
+      <button
+        className="peg-nav-btn left"
+        onClick={(e) => { e.stopPropagation(); prevWork(); }}
+        style={{ position: 'absolute', left: '-60px', top: '50%', transform: 'translateY(-50%)', zIndex: 2000, cursor: 'pointer', background: 'rgba(255,255,255,0.7)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', boxShadow: '0 4px 10px rgba(0,0,0,0.2)', pointerEvents: 'auto' }}
+      >
+        ←
+      </button>
+
+      <div className="pegboard-content" style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <AnimatePresence initial={false}>
+          {[
+            (activeWork - 1 + clientWorks.length) % clientWorks.length,
+            activeWork,
+            (activeWork + 1) % clientWorks.length
+          ].map((index, i) => {
+            const work = clientWorks[index];
+            const isActive = i === 1;
+            return (
+              <motion.div
+                key={work.id}
+                initial={{ opacity: 0, x: i === 0 ? '-150%' : i === 2 ? '50%' : '-50%', scale: 0.8 }}
+                animate={{
+                  opacity: isActive ? 1 : 0.6,
+                  scale: isActive ? 1.05 : 0.75,
+                  x: i === 0 ? '-115%' : i === 2 ? '15%' : '-50%',
+                  y: '-50%',
+                  zIndex: isActive ? 100 : 50,
+                  rotate: i === 0 ? -12 : i === 2 ? 12 : -1
+                }}
+                exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+                drag={designMode ? true : (isActive ? "x" : false)}
+                dragConstraints={designMode ? false : { left: 0, right: 0 }}
+                onDragEnd={(e, info) => {
+                  if (!designMode) {
+                    if (info.offset.x > 80) prevWork();
+                    else if (info.offset.x < -80) nextWork();
+                  }
+                }}
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.4 },
+                  scale: { type: "spring", stiffness: 300, damping: 30 }
+                }}
+                className={`work-card ${isActive ? 'active' : 'side'}`}
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transformOrigin: 'center center',
+                  scale: 'var(--peg-scale, 1)',
+                  cursor: designMode ? 'move' : (isActive ? 'grab' : 'default')
+                }}
+              >
+                <div className="card-pin"></div>
+                <div className="client-tag">{work.project}</div>
+                {work.image && (
+                  <div className="client-card-image">
+                    <img src={work.image} alt={work.name} />
+                  </div>
+                )}
+                <h4>{work.name}</h4>
+                <p>"{work.quote}"</p>
+                {work.instagram && (
+                  <a href={work.instagram} target="_blank" rel="noopener noreferrer" className="client-insta-link">
+                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    {work.instagram.replace('https://www.instagram.com/', '@').replace(/\/$/, '')}
+                  </a>
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
+
+      <button
+        className="peg-nav-btn right"
+        onClick={(e) => { e.stopPropagation(); nextWork(); }}
+        style={{ position: 'absolute', right: '-60px', top: '50%', transform: 'translateY(-50%)', zIndex: 2000, cursor: 'pointer', background: 'rgba(255,255,255,0.7)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', boxShadow: '0 4px 10px rgba(0,0,0,0.2)', pointerEvents: 'auto' }}
+      >
+        →
+      </button>
+    </div>
+  )
+
   // Unified Cloud Renderer
   const renderCloud = (cloud) => {
     const { id, className, src, x, y } = cloud
@@ -836,13 +968,26 @@ function App() {
               handleUIDrag={handleUIDrag}
               selected={heroContentRef && selectedId === "lightSwitch"}
               locked={uiLayout.lightSwitch?.locked}
+              customStyle={{ position: 'absolute', top: '30px', left: '50%' }}
             >
               <div
                 onClick={() => { setLightsOn(!lightsOn); playSwitchSound(); }}
                 className="light-interaction-area"
-                style={{ width: '100px', height: '100px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'transparent',
+                  border: 'none',
+                  boxShadow: 'none',
+                  transition: 'all 0.3s ease',
+                  zIndex: 99999
+                }}
               >
-                {!designMode && <div className="hidden-trigger-hint" />}
               </div>
             </Designable>
 
@@ -950,98 +1095,74 @@ function App() {
       </section>
 
       <section className="workshop-zone">
-        <div className="workshop-wrapper">
-          <AdvancedDesigner id="workshopBg" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode} hideLabel={true}>
-            <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          </AdvancedDesigner>
+        {/* Scaling Wrapper that maintains board ratio regardless of viewport */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: `translate(-50%, -50%) scale(${boardScale})`,
+          width: boardWidth,
+          height: boardHeight,
+          backgroundImage: designMode ? 'none' : 'url("/new workspace.png")',
+          backgroundSize: '100% 100%',
+          backgroundPosition: 'center',
+          zIndex: 1,
+          transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.0)',
+          willChange: 'transform'
+        }}>
+          {designMode ? (
+            <AdvancedDesigner id="workshopBg" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode} hideLabel={true}>
+              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
 
-          <AdvancedDesigner id="pegboard" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
-            <div className="pegboard-overlay" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'visible' }}>
-              <button
-                className="peg-nav-btn left"
-                onClick={(e) => { e.stopPropagation(); prevWork(); }}
-                style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', zIndex: 2000, cursor: 'pointer', background: 'rgba(255,255,255,0.7)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                <AdvancedDesigner id="pegboard" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode} hideLabel={false}>
+                  {renderPegboardContent()}
+                </AdvancedDesigner>
+
+                <div className="laptop-screen-link" style={{ position: 'absolute', top: '45.18%', left: '27.36%', width: '13.45%', height: '13.08%', overflow: 'hidden', background: '#000', zIndex: 20, pointerEvents: 'none' }}>
+                  {renderLaptopIframe()}
+                </div>
+              </div>
+            </AdvancedDesigner>
+          ) : (
+            <>
+              {/* Items stay proportionally fixed because parent is scaled container */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: `${uiLayout.pegboard?.x || 1050}px`,
+                  top: `${uiLayout.pegboard?.y || 480}px`,
+                  width: `${uiLayout.pegboard?.w || 644}px`,
+                  height: `${uiLayout.pegboard?.h || 892}px`,
+                  transform: 'translate(-50%, -50%)',
+                  pointerEvents: 'none',
+                  zIndex: 30
+                }}
               >
-                ←
-              </button>
-
-              <div className="pegboard-content" style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-                <AnimatePresence initial={false}>
-                  {[
-                    (activeWork - 1 + clientWorks.length) % clientWorks.length,
-                    activeWork,
-                    (activeWork + 1) % clientWorks.length
-                  ].map((index, i) => {
-                    const work = clientWorks[index];
-                    const isActive = i === 1;
-                    return (
-                      <motion.div
-                        key={`${work.id}-${i}`}
-                        initial={{ opacity: 0, x: i === 0 ? '-100%' : i === 2 ? '100%' : '0%', y: '-50%' }}
-                        animate={{
-                          opacity: isActive ? 1 : 0.4,
-                          scale: isActive ? 1 : 0.75,
-                          x: i === 0 ? '-60%' : i === 2 ? '60%' : '0%',
-                          y: '-50%',
-                          zIndex: isActive ? 10 : 5,
-                          rotate: i === 0 ? -12 : i === 2 ? 12 : -1
-                        }}
-                        exit={{ opacity: 0 }}
-                        drag={isActive ? "x" : false}
-                        dragConstraints={{ left: 0, right: 0 }}
-                        onDragEnd={(e, info) => {
-                          if (info.offset.x > 80) prevWork();
-                          else if (info.offset.x < -80) nextWork();
-                        }}
-                        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-                        className={`work-card ${isActive ? 'active' : 'side'}`}
-                        style={{ position: 'absolute', left: '50%', top: '50%', transformOrigin: 'center center', marginLeft: '-150px', marginTop: '-200px' }}
-                      >
-                        <div className="card-pin"></div>
-                        <div className="client-tag">{work.project}</div>
-                        {work.image && (
-                          <div className="client-card-image">
-                            <img src={work.image} alt={work.name} />
-                          </div>
-                        )}
-                        <h4>{work.name}</h4>
-                        <p>"{work.quote}"</p>
-                        {work.instagram && (
-                          <a href={work.instagram} target="_blank" rel="noopener noreferrer" className="client-insta-link">
-                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                            {work.instagram.replace('https://www.instagram.com/', '@').replace(/\/$/, '')}
-                          </a>
-                        )}
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+                <div style={{ pointerEvents: 'auto', width: '100%', height: '100%' }}>
+                  {renderPegboardContent()}
+                </div>
               </div>
 
-              <button
-                className="peg-nav-btn right"
-                onClick={(e) => { e.stopPropagation(); nextWork(); }}
-                style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', zIndex: 2000, cursor: 'pointer', background: 'rgba(255,255,255,0.7)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              <div
+                className="laptop-screen-link"
+                style={{
+                  position: 'absolute',
+                  top: '45.18%',
+                  left: '27.36%',
+                  width: '13.45%',
+                  height: '13.08%',
+                  overflow: 'hidden',
+                  background: '#000',
+                  zIndex: 50,
+                  pointerEvents: 'auto',
+                  touchAction: 'auto'
+                }}
               >
-                →
-              </button>
-            </div>
-          </AdvancedDesigner>
-
-          <AdvancedDesigner id="laptopVideo" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
-            <div style={{ width: '100%', height: '100%', overflow: 'hidden', background: '#000' }}>
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/wnHW6o8WMas?autoplay=0&mute=0&controls=1&modestbranding=1"
-                title="Laptop Screen Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ pointerEvents: designMode ? 'none' : 'auto' }}
-              ></iframe>
-            </div>
-          </AdvancedDesigner>
+                {renderLaptopIframe()}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
