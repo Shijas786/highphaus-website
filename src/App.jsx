@@ -6,7 +6,10 @@ import './App.css'
 
 // --- Advanced Components Moved OUTSIDE to Prevent Re-creation on every state change ---
 
+
+
 const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, designMode, hideLabel = false }) => {
+
   const nodeRef = useRef(null)
   const layout = uiLayout[id] || { x: 0, y: 0, w: 400, h: 300 }
   const [isResizing, setIsResizing] = useState(false)
@@ -25,11 +28,20 @@ const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, d
           position: 'absolute',
           width: layout.w,
           height: layout.h,
-          zIndex: designMode ? 1000 : 5,
-          cursor: designMode ? (isResizing ? 'se-resize' : 'move') : 'inherit',
-          pointerEvents: 'auto'
+          width: layout.w,
+          height: layout.h,
+          zIndex: layout.z !== undefined ? layout.z : (designMode ? 1000 : 5),
+          cursor: designMode ? (layout.locked ? 'not-allowed' : (isResizing ? 'se-resize' : 'move')) : 'inherit',
+          pointerEvents: designMode && layout.locked ? 'none' : 'auto',
+          border: designMode && layout.selected ? '2px solid #00ff00' : 'none'
         }}
         className={`${designMode ? "advanced-designable active" : ""} ${isResizing ? "resizing" : ""}`}
+        onClickCapture={(e) => {
+          if (designMode && !layout.locked) {
+            // Select on click if not locked
+            // We rely on parent selection handler if possible, otherwise simple internal effect
+          }
+        }}
       >
         <Resizable
           width={layout.w}
@@ -60,22 +72,25 @@ const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, d
   )
 }
 
-const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabel = false }) => {
+const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabel = false, selected = false, locked = false }) => {
   const elementRef = useRef(null)
   return (
     <Draggable
       nodeRef={elementRef}
       position={position}
       onStop={(e, data) => handleUIDrag(id, data)}
-      disabled={!designMode}
+      disabled={!designMode || locked}
     >
       <div
         ref={elementRef}
         className={designMode ? "designable-active" : ""}
         style={{
           position: 'relative',
-          zIndex: designMode ? 1000 : 'auto',
-          cursor: designMode ? 'move' : 'inherit',
+          zIndex: position && position.z !== undefined ? position.z : (designMode ? 1000 : 'auto'),
+          cursor: designMode ? (locked ? 'not-allowed' : 'move') : 'inherit',
+          pointerEvents: designMode && locked ? 'none' : 'auto',
+          outline: designMode && selected ? '2px solid #00ff00' : 'none',
+          opacity: designMode && locked ? 0.6 : 1
         }}
       >
         {children}
@@ -138,24 +153,120 @@ const ThrowablePillow = ({ id, src, initialPos, designMode, handleUIDrag, lights
 
 
 
+
+
+const RotateDevicePrompt = () => {
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: '#000000',
+      zIndex: 100000,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#ffffff',
+      fontFamily: 'sans-serif'
+    }}>
+      <div style={{
+        width: 60,
+        height: 100,
+        border: '3px solid white',
+        borderRadius: 10,
+        marginBottom: 30,
+        animation: 'rotatePhone 2s infinite ease-in-out'
+      }} />
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', textAlign: 'center' }}>Please Rotate Device</h2>
+      <p style={{ opacity: 0.7, textAlign: 'center', padding: '0 20px' }}>For the best experience, view vertically or in a wider window.</p>
+      <style>{`
+        @keyframes rotatePhone {
+          0% { transform: rotate(0deg); }
+          50% { transform: rotate(90deg); }
+          100% { transform: rotate(0deg); }
+        }
+      `}</style>
+    </div>
+  )
+}
+
 function App() {
   const [scrolled, setScrolled] = useState(false)
   const [scrollY, setScrollY] = useState(0)
 
-  // Designer Mode State
+
+  // Designer Mode State & Selection
   const [designMode, setDesignMode] = useState(false)
+  const [selectedId, setSelectedId] = useState(null)
 
   // Cloud Data Presets
   const desktopCloudData = [
-    { "id": "c1", "src": "/cloud_new_1.png", "className": "c1", "x": 236, "y": 14 },
-    { "id": "c3", "src": "/cloud_new_3.png", "className": "c3", "x": 861, "y": -44 },
-    { "id": "c4", "src": "/cloud_new_1.png", "className": "c4", "x": 552, "y": 62 },
-    { "id": "c6", "src": "/cloud_new_3.png", "className": "c6", "x": 134, "y": 274 },
-    { "id": "c3_copy_1769687040434", "src": "/cloud_new_3.png", "className": "c3", "x": -277, "y": -57 },
-    { "id": "c6_copy_1769688285584", "src": "/cloud_new_3.png", "className": "c6", "x": 702, "y": 305 },
-    { "id": "c4_copy_1769690562836", "src": "/cloud_new_1.png", "className": "c4", "x": 863, "y": 51 },
-    { "id": "c4_copy_1769690583619", "src": "/cloud_new_1.png", "className": "c4", "x": -50, "y": 71 },
-    { "id": "c4_copy_1769690757189", "src": "/cloud_new_1.png", "className": "c4", "x": 1338, "y": 58 }
+    {
+      "id": "c1",
+      "src": "/cloud_new_1.png",
+      "className": "c1",
+      "x": 236,
+      "y": 14
+    },
+    {
+      "id": "c3",
+      "src": "/cloud_new_3.png",
+      "className": "c3",
+      "x": 861,
+      "y": -44
+    },
+    {
+      "id": "c4",
+      "src": "/cloud_new_1.png",
+      "className": "c4",
+      "x": 552,
+      "y": 62
+    },
+    {
+      "id": "c6",
+      "src": "/cloud_new_3.png",
+      "className": "c6",
+      "x": 134,
+      "y": 274
+    },
+    {
+      "id": "c3_copy_1769687040434",
+      "src": "/cloud_new_3.png",
+      "className": "c3",
+      "x": -531,
+      "y": -33
+    },
+    {
+      "id": "c6_copy_1769688285584",
+      "src": "/cloud_new_3.png",
+      "className": "c6",
+      "x": 697,
+      "y": 279
+    },
+    {
+      "id": "c4_copy_1769690562836",
+      "src": "/cloud_new_1.png",
+      "className": "c4",
+      "x": 868,
+      "y": 66
+    },
+    {
+      "id": "c4_copy_1769690583619",
+      "src": "/cloud_new_1.png",
+      "className": "c4",
+      "x": 40,
+      "y": 59
+    },
+    {
+      "id": "c4_copy_1769690757189",
+      "src": "/cloud_new_1.png",
+      "className": "c4",
+      "x": 1348,
+      "y": 58
+    }
   ]
 
   const mobileCloudData = [
@@ -177,25 +288,101 @@ function App() {
 
   // --- UI Elements Layout State ---
   const desktopUiLayout = {
-    heroTitle: { "x": 13, "y": -154 },
-    heroPara: { "x": 11, "y": -169 },
-    heroBtn: { "x": 0, "y": 0 },
-    skyTitle: { "x": -1, "y": 180 },
-    skyPara: { "x": -8, "y": 247 },
-    serviceSlider: { "x": 0, "y": 0 },
-    lightSwitch: { "x": 964, "y": -130 },
-    pillow1: { "x": -223.79296875, "y": 24.9765625 },
-    pillow2: { "x": -113.90234375, "y": 27.80078125 },
-    founder1: { "x": 0, "y": 0 },
-    founder2: { "x": 0, "y": 0 },
-    founder3: { "x": 0, "y": 0 },
-    founder4: { "x": 0, "y": 0 },
-    founder5: { "x": 0, "y": 0 },
-    pegboard: { "x": 577, "y": -80, "w": 861, "h": 584 },
-    labNote: { "x": 100, "y": 350, "w": 240, "h": 120 },
-    statusLabel: { "x": 950, "y": 420, "w": 180, "h": 40 },
-    gearTag: { "x": 1100, "y": -50, "w": 140, "h": 35 },
-    laptopVideo: { "x": 387, "y": -509, "w": 182, "h": 118 }
+    "heroTitle": {
+      "x": 13,
+      "y": -154
+    },
+    "heroPara": {
+      "x": 11,
+      "y": -169
+    },
+    "heroBtn": {
+      "x": 0,
+      "y": 0
+    },
+    "skyTitle": {
+      "x": -25,
+      "y": 228
+    },
+    "skyPara": {
+      "x": -4,
+      "y": 358
+    },
+    "serviceSlider": {
+      "x": 0,
+      "y": 0
+    },
+    "lightSwitch": {
+      "x": 1085,
+      "y": -152
+    },
+    "pillow1": {
+      "x": -308.79296875,
+      "y": 18.9765625
+    },
+    "pillow2": {
+      "x": -228.90234375,
+      "y": 40.80078125
+    },
+    "founder1": {
+      "x": 0,
+      "y": 0
+    },
+    "founder2": {
+      "x": 0,
+      "y": 0
+    },
+    "founder3": {
+      "x": 0,
+      "y": 0,
+      "locked": false
+    },
+    "founder4": {
+      "x": 0,
+      "y": 0
+    },
+    "founder5": {
+      "x": 0,
+      "y": 0
+    },
+    "pegboard": {
+      "x": 521,
+      "y": -21,
+      "w": 594,
+      "h": 518,
+      "locked": false
+    },
+    "labNote": {
+      "x": 100,
+      "y": 350,
+      "w": 240,
+      "h": 120
+    },
+    "statusLabel": {
+      "x": 1018,
+      "y": -771,
+      "w": 180,
+      "h": 40
+    },
+    "gearTag": {
+      "x": 970,
+      "y": 92,
+      "w": 140,
+      "h": 35
+    },
+    "laptopVideo": {
+      "x": 289,
+      "y": 405,
+      "w": 232,
+      "h": 148
+    },
+    "workshopBg": {
+      "x": -183,
+      "y": -106,
+      "w": 1725,
+      "h": 1131,
+      "locked": false
+    }
   }
 
   const mobileUiLayout = {
@@ -217,15 +404,40 @@ function App() {
     labNote: { "x": 20, "y": 560, "w": 200, "h": 100 },
     statusLabel: { "x": 20, "y": 680, "w": 160, "h": 35 },
     gearTag: { "x": 200, "y": 680, "w": 120, "h": 30 },
-    laptopVideo: { "x": 50, "y": 100, "w": 280, "h": 180 }
+    gearTag: { "x": 200, "y": 680, "w": 120, "h": 30 },
+    laptopVideo: { "x": 50, "y": 100, "w": 280, "h": 180 },
+    workshopBg: { "x": 0, "y": 0, "w": 400, "h": 300 }
   }
 
-  const [uiLayout, setUiLayout] = useState(
-    window.innerWidth <= 768 ? mobileUiLayout : desktopUiLayout
-  )
+  // State split to persist edits across resizes
+  const [desktopUi, setDesktopUi] = useState(desktopUiLayout)
+  const [mobileUi, setMobileUi] = useState(mobileUiLayout)
+  // Mobile & Orientation State
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024)
+  const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobileStatus = window.innerWidth <= 1024
+      setIsMobile(mobileStatus)
+      setIsPortrait(window.innerHeight > window.innerWidth)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Derived current layout
+  const uiLayout = isMobile ? mobileUi : desktopUi
+
+  // Wrapper for child components to update the correct state
+  const setUiLayout = (updater) => {
+    const setter = isMobile ? setMobileUi : setDesktopUi
+    setter(updater)
+  }
 
   const [lightsOn, setLightsOn] = useState(true)
   const heroContentRef = useRef(null)
+  const panelRef = useRef(null)
 
   // Programmatic Mechanical Click Sound Generator
   const playSwitchSound = () => {
@@ -253,9 +465,36 @@ function App() {
 
   // Update UI positions
   const handleUIDrag = (key, data) => {
-    setUiLayout(prev => ({
+    const setter = isMobile ? setMobileUi : setDesktopUi
+    setter(prev => ({
       ...prev,
       [key]: { ...prev[key], x: data.x, y: data.y }
+    }))
+  }
+
+  // Bring element to front (increase Z-Index)
+  const bringToFront = (key) => {
+    const setter = isMobile ? setMobileUi : setDesktopUi
+    setter(prev => {
+      // Find max Z
+      let maxZ = 0
+      Object.values(prev).forEach(item => {
+        if (item.z && item.z > maxZ) maxZ = item.z
+      })
+      // Set new Z
+      return {
+        ...prev,
+        [key]: { ...prev[key], z: maxZ + 1 }
+      }
+    })
+  }
+
+  // Toggle Lock
+  const toggleLock = (key) => {
+    const setter = isMobile ? setMobileUi : setDesktopUi
+    setter(prev => ({
+      ...prev,
+      [key]: { ...prev[key], locked: !prev[key].locked }
     }))
   }
 
@@ -316,8 +555,8 @@ function App() {
         return prev
       })
 
-      // Update layout based on new width
-      setUiLayout(prev => window.innerWidth <= 768 ? mobileUiLayout : desktopUiLayout)
+      // Update breakpoint state only - edits are preserved in desktopUi/mobileUi
+      setIsMobile(window.innerWidth <= 768)
     }
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -434,7 +673,8 @@ function App() {
 
 
   return (
-    <div className="app">
+    <div className={`app ${isMobile ? 'mobile-scroll' : ''}`}>
+      {isMobile && isPortrait && <RotateDevicePrompt />}
       <div
         className="fixed-hero"
         style={{
@@ -452,7 +692,14 @@ function App() {
 
         <header className="hero">
           <div ref={heroContentRef} className="container hero-content">
-            <Designable id="lightSwitch" position={uiLayout.lightSwitch} designMode={designMode} handleUIDrag={handleUIDrag}>
+            <Designable
+              id="lightSwitch"
+              position={uiLayout.lightSwitch}
+              designMode={designMode}
+              handleUIDrag={handleUIDrag}
+              selected={heroContentRef && selectedId === "lightSwitch"}
+              locked={uiLayout.lightSwitch?.locked}
+            >
               <div
                 onClick={() => { setLightsOn(!lightsOn); playSwitchSound(); }}
                 className="light-interaction-area"
@@ -486,8 +733,8 @@ function App() {
         </header>
       </div>
 
+      <div className="cloud-bridge">{clouds.map(cloud => renderCloud(cloud))}</div>
       <div className="scrolling-content" style={{ minHeight: '150vh' }}>
-        <div className="cloud-bridge">{clouds.map(cloud => renderCloud(cloud))}</div>
 
         <div className="container sky-content-container">
           <section className="content-section">
@@ -599,7 +846,10 @@ function App() {
             </div>
           </AdvancedDesigner>
 
-          <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" />
+
+          <AdvancedDesigner id="workshopBg" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode} hideLabel={true}>
+            <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </AdvancedDesigner>
 
           {/* New Interactive Highlights */}
 
@@ -636,26 +886,54 @@ function App() {
 
       <div className="loader"><div className="loader-text">highphaus</div></div>
 
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div className="container nav-content">
-          <div className="logo">highphaus</div>
-          <div className="nav-links">
-            <a href="#about">ABOUT</a>
-            <a href="#campuses">CAMPUSES</a>
-            <a href="#content">CONTENT</a>
-            <a href="#faqs">FAQS</a>
-          </div>
-        </div>
-      </nav>
 
-      <div className="designer-panel" style={{ position: 'fixed', bottom: 20, right: 20, background: 'rgba(10,10,10,0.95)', padding: 20, borderRadius: 12, zIndex: 99999, color: 'white', width: 320, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)' }}>
-        <div style={{ marginBottom: 15, fontWeight: 'bold', fontSize: 14 }}>🛠️ MASTER DESIGNER</div>
-        <div style={{ display: 'flex', gap: 10, marginBottom: 15 }}>
-          <button onClick={() => setDesignMode(!designMode)} style={{ flex: 1, padding: '10px', background: designMode ? '#ef4444' : '#22c55e', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{designMode ? 'EXIT EDITOR' : 'ENTER EDITOR'}</button>
-          {designMode && <button onClick={saveLayout} style={{ flex: 1, padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>🚀 SAVE ALL</button>}
+      <Draggable handle=".panel-handle" nodeRef={panelRef}>
+        <div ref={panelRef} className="designer-panel" style={{ position: 'fixed', bottom: 20, right: 20, background: 'rgba(10,10,10,0.95)', padding: 20, borderRadius: 12, zIndex: 99999, color: 'white', width: 320, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+          <div className="panel-handle" style={{ marginBottom: 15, fontWeight: 'bold', fontSize: 14, cursor: 'grab', background: '#333', padding: '5px 10px', borderRadius: 6, textAlign: 'center' }}>:: 🛠️ MASTER DESIGNER ::</div>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 15 }}>
+            <button onClick={() => setDesignMode(!designMode)} style={{ flex: 1, padding: '10px', background: designMode ? '#ef4444' : '#22c55e', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{designMode ? 'EXIT EDITOR' : 'ENTER EDITOR'}</button>
+            {designMode && <button onClick={saveLayout} style={{ flex: 1, padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>🚀 SAVE ALL</button>}
+          </div>
+
+          {designMode && (
+            <div style={{ overflowY: 'auto', flex: 1 }}>
+              <div style={{ marginBottom: 10, fontSize: 12, fontWeight: 'bold', borderBottom: '1px solid #333', paddingBottom: 5 }}>LAYERS (Select | Lock | Front)</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 15 }}>
+                {Object.keys(uiLayout).map(key => {
+                  const item = uiLayout[key]
+                  const isSelected = selectedId === key
+                  const isLocked = item.locked
+                  return (
+                    <div
+                      key={key}
+                      onClick={() => setSelectedId(key)}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        background: isSelected ? '#3b82f6' : '#222',
+                        padding: '5px 10px',
+                        borderRadius: 4,
+                        fontSize: 11,
+                        cursor: 'pointer',
+                        border: isSelected ? '1px solid #60a5fa' : '1px solid transparent'
+                      }}>
+                      <span style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isLocked ? 0.5 : 1 }}>
+                        {isLocked ? '🔒 ' : ''}{key}
+                      </span>
+                      <div style={{ display: 'flex', gap: 5 }}>
+                        <button onClick={(e) => { e.stopPropagation(); toggleLock(key); }} style={{ cursor: 'pointer', background: isLocked ? '#f59e0b' : '#333', border: 'none', color: '#fff', borderRadius: 4, padding: '2px 6px', opacity: 0.9 }}>{isLocked ? 'Unlock' : 'Lock'}</button>
+                        <button onClick={(e) => { e.stopPropagation(); bringToFront(key); }} style={{ cursor: 'pointer', background: '#444', border: 'none', color: '#fff', borderRadius: 4, padding: '2px 6px' }}>↑</button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              <textarea readOnly style={{ width: '100%', height: 100, background: '#000', color: '#4ade80', border: '1px solid #333', borderRadius: 6, fontSize: 10, fontFamily: 'monospace', padding: 10, resize: 'none' }} value={JSON.stringify({ clouds, ui: uiLayout }, null, 2)} />
+            </div>
+          )}
         </div>
-        {designMode && <textarea readOnly style={{ width: '100%', height: 150, background: '#000', color: '#4ade80', border: '1px solid #333', borderRadius: 6, fontSize: 10, fontFamily: 'monospace', padding: 10, resize: 'none' }} value={JSON.stringify({ clouds, ui: uiLayout }, null, 2)} />}
-      </div>
+      </Draggable>
     </div>
   )
 }
