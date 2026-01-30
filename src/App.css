@@ -534,6 +534,19 @@ body {
   padding: 0 2rem;
 }
 
+.peg-nav-btn {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  /* Larger for easier tap */
+  color: #333;
+  cursor: pointer;
+  z-index: 100 !important;
+  /* Force priority */
+  pointer-events: auto !important;
+  padding: 20px;
+}
+
 .slider-arrow {
   background: none;
   border: none;
