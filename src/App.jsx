@@ -1,0 +1,663 @@
+import React, { useState, useEffect, useRef, createRef } from 'react'
+import Draggable from 'react-draggable'
+import { Resizable } from 'react-resizable'
+import { motion, useMotionValue } from 'framer-motion'
+import './App.css'
+
+// --- Advanced Components Moved OUTSIDE to Prevent Re-creation on every state change ---
+
+const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, designMode, hideLabel = false }) => {
+  const nodeRef = useRef(null)
+  const layout = uiLayout[id] || { x: 0, y: 0, w: 400, h: 300 }
+  const [isResizing, setIsResizing] = useState(false)
+
+  return (
+    <Draggable
+      nodeRef={nodeRef}
+      position={{ x: layout.x, y: layout.y }}
+      onStop={(e, data) => handleUIDrag(id, { ...layout, x: data.x, y: data.y })}
+      disabled={!designMode || isResizing}
+      cancel=".resizer-handle"
+    >
+      <div
+        ref={nodeRef}
+        style={{
+          position: 'absolute',
+          width: layout.w,
+          height: layout.h,
+          zIndex: designMode ? 1000 : 5,
+          cursor: designMode ? (isResizing ? 'se-resize' : 'move') : 'inherit',
+          pointerEvents: 'auto'
+        }}
+        className={`${designMode ? "advanced-designable active" : ""} ${isResizing ? "resizing" : ""}`}
+      >
+        <Resizable
+          width={layout.w}
+          height={layout.h}
+          onResizeStart={() => setIsResizing(true)}
+          onResizeStop={() => setIsResizing(false)}
+          onResize={(e, { size }) => {
+            setUiLayout(prev => ({
+              ...prev,
+              [id]: { ...prev[id], w: size.width, h: size.height }
+            }))
+          }}
+          minConstraints={[100, 50]}
+          draggableOpts={{ disabled: !designMode }}
+          handle={<div className="resizer-handle" />}
+        >
+          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+            {children}
+          </div>
+        </Resizable>
+        {designMode && !hideLabel && (
+          <div className="design-label-adv">
+            {id} | x:{Math.round(layout.x)} y:{Math.round(layout.y)} w:{Math.round(layout.w)} h:{Math.round(layout.h)}
+          </div>
+        )}
+      </div>
+    </Draggable>
+  )
+}
+
+const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabel = false }) => {
+  const elementRef = useRef(null)
+  return (
+    <Draggable
+      nodeRef={elementRef}
+      position={position}
+      onStop={(e, data) => handleUIDrag(id, data)}
+      disabled={!designMode}
+    >
+      <div
+        ref={elementRef}
+        className={designMode ? "designable-active" : ""}
+        style={{
+          position: 'relative',
+          zIndex: designMode ? 1000 : 'auto',
+          cursor: designMode ? 'move' : 'inherit',
+        }}
+      >
+        {children}
+        {designMode && !hideLabel && <span className="design-label">{id}</span>}
+      </div>
+    </Draggable>
+  )
+}
+
+const ThrowablePillow = ({ id, src, initialPos, designMode, handleUIDrag, lightsOn }) => {
+  const x = useMotionValue(initialPos.x)
+  const y = useMotionValue(initialPos.y)
+
+  return (
+    <motion.div
+      drag
+      dragMomentum={!designMode}
+      dragTransition={{ bounceStiffness: 100, bounceDamping: 15 }}
+      whileTap={{ scale: 1.1, rotate: 5 }}
+      style={{
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        x: x,
+        y: y,
+        width: '260px',
+        height: 'auto',
+        cursor: designMode ? 'move' : 'grab',
+        zIndex: 100,
+        touchAction: 'none',
+        marginLeft: '-130px',
+        marginTop: '-130px',
+        '--room-pillow-filter': lightsOn
+          ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.4)) brightness(0.92) contrast(0.96)'
+          : 'drop-shadow(0 10px 20px rgba(0,0,0,0.6)) brightness(0.25) contrast(1.1)'
+      }}
+      onDragEnd={(e, info) => {
+        if (designMode) {
+          handleUIDrag(id, { x: x.get(), y: y.get() })
+        }
+      }}
+    >
+      <img
+        src={src}
+        alt="Pillow"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          pointerEvents: 'none',
+          filter: 'var(--room-pillow-filter)',
+          transition: 'filter 0.5s ease'
+        }}
+        draggable="false"
+      />
+      {designMode && <span className="design-label" style={{ top: -20, right: 0 }}>{id}</span>}
+    </motion.div>
+  )
+}
+
+
+
+function App() {
+  const [scrolled, setScrolled] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
+
+  // Designer Mode State
+  const [designMode, setDesignMode] = useState(false)
+
+  // Cloud Data Presets
+  const desktopCloudData = [
+    { "id": "c1", "src": "/cloud_new_1.png", "className": "c1", "x": 236, "y": 14 },
+    { "id": "c3", "src": "/cloud_new_3.png", "className": "c3", "x": 861, "y": -44 },
+    { "id": "c4", "src": "/cloud_new_1.png", "className": "c4", "x": 552, "y": 62 },
+    { "id": "c6", "src": "/cloud_new_3.png", "className": "c6", "x": 134, "y": 274 },
+    { "id": "c3_copy_1769687040434", "src": "/cloud_new_3.png", "className": "c3", "x": -277, "y": -57 },
+    { "id": "c6_copy_1769688285584", "src": "/cloud_new_3.png", "className": "c6", "x": 702, "y": 305 },
+    { "id": "c4_copy_1769690562836", "src": "/cloud_new_1.png", "className": "c4", "x": 863, "y": 51 },
+    { "id": "c4_copy_1769690583619", "src": "/cloud_new_1.png", "className": "c4", "x": -50, "y": 71 },
+    { "id": "c4_copy_1769690757189", "src": "/cloud_new_1.png", "className": "c4", "x": 1338, "y": 58 }
+  ]
+
+  const mobileCloudData = [
+    { "id": "c1", "src": "/cloud_new_1.png", "className": "c1", "x": 248, "y": 120 },
+    { "id": "c3", "src": "/cloud_new_3.png", "className": "c3", "x": 861, "y": -44 },
+    { "id": "c4", "src": "/cloud_new_1.png", "className": "c4", "x": 552, "y": 62 },
+    { "id": "c6", "src": "/cloud_new_3.png", "className": "c6", "x": 298, "y": 266 },
+    { "id": "c3_copy_1769687040434", "src": "/cloud_new_3.png", "className": "c3", "x": -56, "y": 96 },
+    { "id": "c6_copy_1769688285584", "src": "/cloud_new_3.png", "className": "c6", "x": 565, "y": 334 },
+    { "id": "c4_copy_1769690562836", "src": "/cloud_new_1.png", "className": "c4", "x": 914, "y": 59 },
+    { "id": "c4_copy_1769690583619", "src": "/cloud_new_1.png", "className": "c4", "x": 135, "y": 146 },
+    { "id": "c4_copy_1769690757189", "src": "/cloud_new_1.png", "className": "c4", "x": 1338, "y": 58 }
+  ]
+
+  // Initialize clouds state based on screen size
+  const [clouds, setClouds] = useState(
+    window.innerWidth <= 768 ? mobileCloudData : desktopCloudData
+  )
+
+  // --- UI Elements Layout State ---
+  const desktopUiLayout = {
+    heroTitle: { "x": 13, "y": -154 },
+    heroPara: { "x": 11, "y": -169 },
+    heroBtn: { "x": 0, "y": 0 },
+    skyTitle: { "x": -1, "y": 180 },
+    skyPara: { "x": -8, "y": 247 },
+    serviceSlider: { "x": 0, "y": 0 },
+    lightSwitch: { "x": 964, "y": -130 },
+    pillow1: { "x": -223.79296875, "y": 24.9765625 },
+    pillow2: { "x": -113.90234375, "y": 27.80078125 },
+    founder1: { "x": 0, "y": 0 },
+    founder2: { "x": 0, "y": 0 },
+    founder3: { "x": 0, "y": 0 },
+    founder4: { "x": 0, "y": 0 },
+    founder5: { "x": 0, "y": 0 },
+    pegboard: { "x": 577, "y": -80, "w": 861, "h": 584 },
+    labNote: { "x": 100, "y": 350, "w": 240, "h": 120 },
+    statusLabel: { "x": 950, "y": 420, "w": 180, "h": 40 },
+    gearTag: { "x": 1100, "y": -50, "w": 140, "h": 35 },
+    laptopVideo: { "x": 387, "y": -509, "w": 182, "h": 118 }
+  }
+
+  const mobileUiLayout = {
+    heroTitle: { "x": 0, "y": -50 },
+    heroPara: { "x": 0, "y": 0 },
+    heroBtn: { "x": 0, "y": 0 },
+    skyTitle: { "x": 0, "y": 50 },
+    skyPara: { "x": 0, "y": 150 },
+    serviceSlider: { "x": 0, "y": 0 },
+    lightSwitch: { "x": 300, "y": -100 },
+    pillow1: { "x": -50, "y": 0 },
+    pillow2: { "x": 50, "y": 0 },
+    founder1: { "x": 0, "y": 0 },
+    founder2: { "x": 0, "y": 0 },
+    founder3: { "x": 0, "y": 0 },
+    founder4: { "x": 0, "y": 0 },
+    founder5: { "x": 0, "y": 0 },
+    pegboard: { "x": 0, "y": -10, "w": 450, "h": 300 },
+    labNote: { "x": 20, "y": 560, "w": 200, "h": 100 },
+    statusLabel: { "x": 20, "y": 680, "w": 160, "h": 35 },
+    gearTag: { "x": 200, "y": 680, "w": 120, "h": 30 },
+    laptopVideo: { "x": 50, "y": 100, "w": 280, "h": 180 }
+  }
+
+  const [uiLayout, setUiLayout] = useState(
+    window.innerWidth <= 768 ? mobileUiLayout : desktopUiLayout
+  )
+
+  const [lightsOn, setLightsOn] = useState(true)
+  const heroContentRef = useRef(null)
+
+  // Programmatic Mechanical Click Sound Generator
+  const playSwitchSound = () => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+      const oscillator = audioCtx.createOscillator()
+      const gainNode = audioCtx.createGain()
+
+      oscillator.type = 'sine'
+      oscillator.frequency.setValueAtTime(300, audioCtx.currentTime)
+      oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.03)
+
+      gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03)
+
+      oscillator.connect(gainNode)
+      gainNode.connect(audioCtx.destination)
+
+      oscillator.start()
+      oscillator.stop(audioCtx.currentTime + 0.03)
+    } catch (e) {
+      console.warn("Audio Context error:", e)
+    }
+  }
+
+  // Update UI positions
+  const handleUIDrag = (key, data) => {
+    setUiLayout(prev => ({
+      ...prev,
+      [key]: { ...prev[key], x: data.x, y: data.y }
+    }))
+  }
+
+  // Refs map for dynamic clouds
+  const nodeRefs = useRef(new Map())
+  const getRef = (id) => {
+    if (!nodeRefs.current.has(id)) {
+      nodeRefs.current.set(id, createRef())
+    }
+    return nodeRefs.current.get(id)
+  }
+
+  // Update positions
+  const handleDrag = (id, e, data) => {
+    setClouds(prev => prev.map(c =>
+      c.id === id ? { ...c, x: data.x, y: data.y } : c
+    ))
+  }
+
+  // Clone a cloud
+  const duplicateCloud = (cloud) => {
+    const newId = `${cloud.className}_copy_${Date.now()}`
+    const newCloud = {
+      ...cloud,
+      id: newId,
+      x: cloud.x + 40,
+      y: cloud.y + 40
+    }
+    setClouds(prev => [...prev, newCloud])
+  }
+
+  // Delete a cloud
+  const deleteCloud = (id) => {
+    setClouds(prev => prev.filter(c => c.id !== id))
+  }
+
+  // Save layout (Copy to clipboard)
+  const saveLayout = () => {
+    const fullLayout = {
+      clouds,
+      ui: uiLayout
+    }
+    const json = JSON.stringify(fullLayout, null, 2)
+    navigator.clipboard.writeText(json)
+    alert("Full Layout JSON copied to clipboard!")
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+      setScrolled(window.scrollY > 50)
+    }
+
+    const handleResize = () => {
+      setClouds(prev => {
+        // Logic could be added here to re-distribute clouds on resize if strictly needed
+        // But usually we just swap the dataset on full reload or significant breakpoint change
+        return prev
+      })
+
+      // Update layout based on new width
+      setUiLayout(prev => window.innerWidth <= 768 ? mobileUiLayout : desktopUiLayout)
+    }
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [designMode])
+
+
+
+  // Unified Cloud Renderer
+  const renderCloud = (cloud) => {
+    const { id, className, src, x, y } = cloud
+    return (
+      <Draggable
+        key={id}
+        nodeRef={getRef(id)}
+        position={{ x, y }}
+        onStop={(e, data) => handleDrag(id, e, data)}
+        disabled={!designMode}
+      >
+        <div
+          ref={getRef(id)}
+          style={{
+            position: 'absolute',
+            zIndex: designMode ? 9999 : 30,
+            cursor: designMode ? 'move' : 'default',
+            border: designMode ? '2px dashed #ffff00' : 'none',
+            pointerEvents: designMode ? 'auto' : 'none'
+          }}
+        >
+          <img
+            src={src}
+            className={`cloud ${className}`}
+            alt=""
+            draggable="false"
+            style={{
+              position: 'relative',
+              top: 0,
+              left: 0,
+              pointerEvents: designMode ? 'auto' : 'none'
+            }}
+          />
+          {designMode && (
+            <div style={{
+              background: 'black', color: 'yellow', fontSize: 10, fontWeight: 'bold',
+              position: 'absolute', top: -25, left: 0, padding: '2px 4px',
+              display: 'flex', gap: 5, pointerEvents: 'auto'
+            }}>
+              <span>{id}</span>
+              <button onClick={(e) => { e.stopPropagation(); duplicateCloud(cloud); }} style={{ cursor: 'pointer', background: '#444', color: '#fff', border: 'none', padding: '2px 4px' }}>📋</button>
+              <button onClick={(e) => { e.stopPropagation(); deleteCloud(id); }} style={{ cursor: 'pointer', background: '#900', color: '#fff', border: 'none', padding: '2px 4px' }}>❌</button>
+            </div>
+          )}
+        </div>
+      </Draggable>
+    )
+  }
+
+  // Services Data
+  const services = [
+    { id: 1, tag: "LIVE", title: "The Founders Lab", description: "At Highp haus, Gen Z builders are crafting AI, robotics, and hardware solutions — reminiscent of early Silicon Valley energy.", link: "READ ARTICLE ↗" },
+    { id: 2, tag: "CRAFT", title: "Media Production", description: "We help high-growth founders tell their stories through cinematic video, high-end editorial, and viral storytelling.", link: "VIEW WORKS ↗" },
+    { id: 3, tag: "SPACE", title: "Shared Environments", description: "Access to private labs and shared making-spaces designed for 24/7 building, learning, and radical collaboration.", link: "APPLY NOW ↗" }
+  ]
+  const [activeService, setActiveService] = useState(0)
+  const nextService = () => setActiveService((prev) => (prev + 1) % services.length)
+  const prevService = () => setActiveService((prev) => (prev - 1 + services.length) % services.length)
+
+  // Client Works Data for Pegboard
+  const clientWorks = [
+    {
+      id: 1,
+      name: 'NutriBrunch',
+      project: 'NUTRITION PLATFORM',
+      image: '/nutribrunch.jpg',
+      quote: "NutriBrunch is a nutrition-first food platform delivering fresh, Indian-inspired fruit and protein bowls. We focus on real food and oil-free recipes that fit naturally into daily routines. Through simple, affordable subscription plans, we help you build long-term healthy habits—one bowl at a time.",
+      instagram: 'https://www.instagram.com/nutribrunch.in/'
+    },
+    { id: 2, name: 'Vidhi', project: 'ELARA', quote: "Highphaus connected me with a community of builders who challenged me to think bigger. The energy here gave me the confidence to go all in on my startup and set it on a path to grow." },
+    { id: 3, name: 'Dev Mandal', project: 'MARKOV', quote: "Being at Highphaus was simply the most productive, fun and exhilarating months of my life! It gave me exactly the environment needed to launch my startup and meet incredible people." },
+    { id: 4, name: 'Dheemanth', project: 'MAYA RESEARCH', quote: "The drive to build something bold and useful has always been inside me. Highp Haus provided the early support and radical collaboration that meant everything to our progress." }
+  ]
+  const [activeWork, setActiveWork] = useState(0)
+  const nextWork = () => setActiveWork(prev => (prev + 1) % clientWorks.length)
+  const prevWork = () => setActiveWork(prev => (prev - 1 + clientWorks.length) % clientWorks.length)
+
+  // Founders Carousel Data & State
+  const [founderIndex, setFounderIndex] = useState(0)
+  const allFounders = [
+    { id: "founder1", src: "/founder_anim_1.png" },
+    { id: "founder2", src: "/founder_anim_2.png" },
+    { id: "founder3", src: "/founder_anim_3.png", note: "A WEB3 BUILDER SHIPPING ONCHAIN PRODUCT" },
+    { id: "founder4", src: "/founder_anim_4.png" },
+    { id: "founder5", src: "/founder_anim_5.png" },
+    { id: "upcoming_1", isPlaceholder: true },
+    { id: "upcoming_2", isPlaceholder: true },
+    { id: "upcoming_3", isPlaceholder: true }
+  ]
+  const visibleFoundersCount = 5
+  // Calculate visible slice in a circular manner
+  const visibleFounders = []
+  for (let i = 0; i < visibleFoundersCount; i++) {
+    visibleFounders.push(allFounders[(founderIndex + i) % allFounders.length])
+  }
+
+  const nextFounder = () => setFounderIndex(prev => (prev + 1) % allFounders.length)
+  const prevFounder = () => setFounderIndex(prev => (prev - 1 + allFounders.length) % allFounders.length)
+
+
+
+
+  return (
+    <div className="app">
+      <div
+        className="fixed-hero"
+        style={{
+          '--room-pillow-filter': lightsOn
+            ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.4)) brightness(0.92) contrast(0.96)'
+            : 'drop-shadow(0 10px 20px rgba(0,0,0,0.6)) brightness(0.25) contrast(1.1)'
+        }}
+      >
+        <img
+          src={lightsOn ? "/hero_bg.jpg" : "/hero_bg_dark.jpg"}
+          className="video-bg"
+          alt="Workspace"
+        />
+        <div className="gradient-bg"></div>
+
+        <header className="hero">
+          <div ref={heroContentRef} className="container hero-content">
+            <Designable id="lightSwitch" position={uiLayout.lightSwitch} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <div
+                onClick={() => { setLightsOn(!lightsOn); playSwitchSound(); }}
+                className="light-interaction-area"
+                style={{ width: '80px', height: '80px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                {!designMode && <div className="hidden-trigger-hint" />}
+              </div>
+            </Designable>
+
+            <Designable id="heroTitle" position={uiLayout.heroTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <h1 style={{ transform: `translateY(${scrollY * 0.2}px)`, opacity: Math.max(0, 1 - scrollY / 400), filter: `blur(${0.2 + scrollY * 0.02}px)` }}>
+                The media × startup lab<br />empowering founders.
+              </h1>
+            </Designable>
+
+            <Designable id="heroPara" position={uiLayout.heroPara} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <p style={{ transform: `translateY(${scrollY * 0.1}px)`, opacity: Math.max(0, 1 - scrollY / 300) }}>
+                <span>Highphaus brings young builders into shared environments labs, programs, and gatherings designed for making, learning, and shipping</span>
+              </p>
+            </Designable>
+
+            <Designable id="heroBtn" position={uiLayout.heroBtn} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <div className="btn-group" style={{ marginBottom: '4rem' }}>
+                <a href="#join" className="btn btn-outline">APPLY NOW ↗</a>
+              </div>
+            </Designable>
+
+            <ThrowablePillow id="pillow1" src="/pillow_1.png" initialPos={uiLayout.pillow1} designMode={designMode} handleUIDrag={handleUIDrag} lightsOn={lightsOn} />
+            <ThrowablePillow id="pillow2" src="/pillow_3.png" initialPos={uiLayout.pillow2} designMode={designMode} handleUIDrag={handleUIDrag} lightsOn={lightsOn} />
+          </div>
+        </header>
+      </div>
+
+      <div className="scrolling-content" style={{ minHeight: '150vh' }}>
+        <div className="cloud-bridge">{clouds.map(cloud => renderCloud(cloud))}</div>
+
+        <div className="container sky-content-container">
+          <section className="content-section">
+            <Designable id="skyTitle" position={uiLayout.skyTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <h2 className="big-headline reveal">For the world’s best talents to go<br />full-time on what they love.</h2>
+            </Designable>
+            <Designable id="skyPara" position={uiLayout.skyPara} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <p className="sky-description reveal" style={{ marginTop: '2rem' }}>At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.</p>
+            </Designable>
+          </section>
+
+
+        </div>
+      </div>
+
+      <section className="black-section">
+        <div className="container page-core">
+          <Designable id="pageTitle" position={uiLayout.pageTitle || { x: 0, y: 0 }} designMode={designMode} handleUIDrag={handleUIDrag}>
+            <h2 className="misfit-headline reveal">A mix of every <span>kind of modern builder.</span></h2>
+          </Designable>
+
+          <p className="misfit-copy reveal" style={{ marginTop: '2rem' }}>
+            Builders, digital marketers, editors, videographers, and content creators — all under one roof.
+            <br /><br />
+            On any given day, you might be shipping a product next to someone editing a video, planning a campaign, or shaping content for the next launch.
+          </p>
+
+          <div className="misfit-row-container reveal">
+            <div className="watermark-bg">be m</div>
+            <div className="founders-carousel-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+              <button className="founder-nav-btn left" onClick={prevFounder}>←</button>
+
+              <div className="founders-horizontal-row">
+                {visibleFounders.map(f => (
+                  <Designable key={f.id} id={f.id} position={uiLayout[f.id] || { x: 0, y: 0 }} designMode={designMode} handleUIDrag={handleUIDrag}>
+                    <div className={`founder-circle ${f.isPlaceholder ? 'placeholder' : ''}`}>
+                      {f.isPlaceholder ? (
+                        <div className="placeholder-content">???</div>
+                      ) : (
+                        <>
+                          <img src={f.src} alt="" />
+                          {f.note && (
+                            <div className="founder-overlay">
+                              <span>{f.note}</span>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </Designable>
+                ))}
+              </div>
+
+              <button className="founder-nav-btn right" onClick={nextFounder}>→</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="workshop-zone">
+        <div className="workshop-wrapper">
+          <AdvancedDesigner id="pegboard" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
+            <div className="pegboard-overlay" style={{ width: '100%', height: '100%', position: 'relative', top: 0, left: 0 }}>
+              <button className="peg-nav-btn left" onClick={prevWork}>←</button>
+              <div className="pegboard-content">
+                {[
+                  (activeWork - 1 + clientWorks.length) % clientWorks.length,
+                  activeWork,
+                  (activeWork + 1) % clientWorks.length
+                ].map((index, i) => {
+                  const work = clientWorks[index];
+                  const isActive = i === 1;
+                  return (
+                    <motion.div
+                      key={work.id}
+                      layout
+                      initial={false}
+                      animate={{
+                        opacity: isActive ? 1 : 0.4,
+                        scale: isActive ? 1 : 0.75,
+                        x: i === 0 ? '-60%' : i === 2 ? '60%' : '0%',
+                        zIndex: isActive ? 10 : 5,
+                        rotate: i === 0 ? -12 : i === 2 ? 12 : -1
+                      }}
+                      transition={{ type: 'spring', stiffness: 180, damping: 24, mass: 1.2 }}
+                      className={`work-card ${isActive ? 'active' : 'side'}`}
+                      style={{ position: 'absolute' }}
+                    >
+                      <div className="card-pin"></div>
+                      <div className="client-tag">{work.project}</div>
+                      {work.image && (
+                        <div className="client-card-image">
+                          <img src={work.image} alt={work.name} />
+                        </div>
+                      )}
+                      <h4>{work.name}</h4>
+                      <p>"{work.quote}"</p>
+                      {work.instagram && (
+                        <a href={work.instagram} target="_blank" rel="noopener noreferrer" className="client-insta-link">
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                          {work.instagram.replace('https://www.instagram.com/', '@').replace(/\/$/, '')}
+                        </a>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+              <button className="peg-nav-btn right" onClick={nextWork}>→</button>
+            </div>
+          </AdvancedDesigner>
+
+          <img src="/new workspace.png" alt="Workshop" className="workshop-bg-img" />
+
+          {/* New Interactive Highlights */}
+
+
+          <AdvancedDesigner id="statusLabel" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
+            <div className="status-label-box">
+              <span className="dot active"></span>
+              <span className="text">STATION 04 - ACTIVE</span>
+            </div>
+          </AdvancedDesigner>
+
+          <AdvancedDesigner id="gearTag" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
+            <div className="gear-tag-box">
+              ALPHA BUILD v0.9
+            </div>
+          </AdvancedDesigner>
+
+          <AdvancedDesigner id="laptopVideo" uiLayout={uiLayout} setUiLayout={setUiLayout} handleUIDrag={handleUIDrag} designMode={designMode}>
+            <div style={{ width: '100%', height: '100%', overflow: 'hidden', background: '#000' }}>
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/wnHW6o8WMas?autoplay=0&mute=0&controls=1&modestbranding=1"
+                title="Laptop Screen Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ pointerEvents: designMode ? 'none' : 'auto' }}
+              ></iframe>
+            </div>
+          </AdvancedDesigner>
+        </div>
+      </section>
+
+      <div className="loader"><div className="loader-text">highphaus</div></div>
+
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="container nav-content">
+          <div className="logo">highphaus</div>
+          <div className="nav-links">
+            <a href="#about">ABOUT</a>
+            <a href="#campuses">CAMPUSES</a>
+            <a href="#content">CONTENT</a>
+            <a href="#faqs">FAQS</a>
+          </div>
+        </div>
+      </nav>
+
+      <div className="designer-panel" style={{ position: 'fixed', bottom: 20, right: 20, background: 'rgba(10,10,10,0.95)', padding: 20, borderRadius: 12, zIndex: 99999, color: 'white', width: 320, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)' }}>
+        <div style={{ marginBottom: 15, fontWeight: 'bold', fontSize: 14 }}>🛠️ MASTER DESIGNER</div>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 15 }}>
+          <button onClick={() => setDesignMode(!designMode)} style={{ flex: 1, padding: '10px', background: designMode ? '#ef4444' : '#22c55e', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{designMode ? 'EXIT EDITOR' : 'ENTER EDITOR'}</button>
+          {designMode && <button onClick={saveLayout} style={{ flex: 1, padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>🚀 SAVE ALL</button>}
+        </div>
+        {designMode && <textarea readOnly style={{ width: '100%', height: 150, background: '#000', color: '#4ade80', border: '1px solid #333', borderRadius: 6, fontSize: 10, fontFamily: 'monospace', padding: 10, resize: 'none' }} value={JSON.stringify({ clouds, ui: uiLayout }, null, 2)} />}
+      </div>
+    </div>
+  )
+}
+
+export default App
