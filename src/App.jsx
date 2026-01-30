@@ -28,8 +28,6 @@ const AdvancedDesigner = ({ id, children, uiLayout, setUiLayout, handleUIDrag, d
           position: 'absolute',
           width: layout.w,
           height: layout.h,
-          width: layout.w,
-          height: layout.h,
           zIndex: layout.z !== undefined ? layout.z : (designMode ? 1000 : 5),
           cursor: designMode ? (layout.locked ? 'not-allowed' : (isResizing ? 'se-resize' : 'move')) : 'inherit',
           pointerEvents: designMode && layout.locked ? 'none' : 'auto',
