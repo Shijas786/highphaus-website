@@ -1342,9 +1342,9 @@ body {
 .work-card {
   background: #fffef8;
   /* Off-white aesthetic paper */
-  width: 400px;
+  width: clamp(260px, 85vw, 400px);
   min-height: 260px;
-  padding: 2rem 2rem;
+  padding: 1.5rem;
   transform: rotate(-2deg);
   position: relative;
   transition: opacity 0.4s ease, scale 0.4s ease, transform 0.4s ease;
@@ -1559,8 +1559,71 @@ body {
   clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
 }
 
+/* --- Mobile Preview Simulation --- */
+.app.mobile-preview {
+  margin: 0 auto;
+  width: 430px;
+  /* iPhone 14 Pro Max width */
+  height: 932px;
+  /* iPhone 14 Pro Max height */
+  position: relative;
+  overflow: hidden;
+  border: 12px solid #222;
+  border-radius: 60px;
+  box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+  margin-top: 40px;
+  margin-bottom: 40px;
+  background: #000;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top center;
+}
+
+.app.mobile-preview::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 35px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 10000;
+}
+
+.app.mobile-preview .fixed-hero,
+.app.mobile-preview .scrolling-content,
+.app.mobile-preview .black-section,
+.app.mobile-preview .workshop-zone {
+  width: 100% !important;
+}
+
+.app.mobile-preview .cloud-bridge {
+  top: 50vh;
+}
+
+.app.mobile-preview .hero-content h1 {
+  font-size: 2.2rem !important;
+}
+
+.app.mobile-preview .big-headline {
+  font-size: 2rem !important;
+}
+
+/* Scrollbar within preview */
+.app.mobile-preview::-webkit-scrollbar {
+  width: 0px;
+}
+
+.app.mobile-preview {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
+
+  /* ... existing mobile styles ... */
   .hero-content h1 {
     font-size: 2.5rem !important;
   }
@@ -1588,12 +1651,10 @@ body {
     width: 100%;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    /* Firefox */
   }
 
   .founders-horizontal-row::-webkit-scrollbar {
     display: none;
-    /* Chrome/Safari */
   }
 
   .founder-circle {
@@ -1604,11 +1665,9 @@ body {
   }
 
   .workshop-zone {
-    /* Ensure container handles overflow if absolute items are out of bounds */
     overflow: hidden;
   }
 
-  /* Reset absolute positions that might be off-screen if JS fails */
   .advanced-designable {
     max-width: 100vw;
   }

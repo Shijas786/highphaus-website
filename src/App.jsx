@@ -103,10 +103,12 @@ const Designable = ({ id, children, position, designMode, handleUIDrag, hideLabe
 const ThrowablePillow = ({ id, src, initialPos, designMode, handleUIDrag, lightsOn }) => {
   const x = useMotionValue(initialPos.x)
   const y = useMotionValue(initialPos.y)
+  const size = initialPos.size || 260
+  const offset = size / 2
 
   return (
     <motion.div
-      drag
+      drag={designMode ? true : "x"}
       dragMomentum={!designMode}
       dragTransition={{ bounceStiffness: 100, bounceDamping: 15 }}
       whileTap={{ scale: 1.1, rotate: 5 }}
@@ -116,13 +118,13 @@ const ThrowablePillow = ({ id, src, initialPos, designMode, handleUIDrag, lights
         top: '50%',
         x: x,
         y: y,
-        width: 'clamp(100px, 20vw, 260px)',
+        width: size !== 260 ? `${size}px` : 'clamp(100px, 20vw, 260px)',
         height: 'auto',
         cursor: designMode ? 'move' : 'grab',
         zIndex: 100,
         touchAction: 'none',
-        marginLeft: '-130px',
-        marginTop: '-130px',
+        marginLeft: size !== 260 ? `-${offset}px` : '-130px',
+        marginTop: size !== 260 ? `-${offset}px` : '-130px',
         transition: 'transform 0.1s linear',
         '--room-pillow-filter': lightsOn
           ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.4)) brightness(0.92) contrast(0.96)'
@@ -200,6 +202,7 @@ function App() {
 
   // Designer Mode State & Selection
   const [designMode, setDesignMode] = useState(false)
+  const [mobilePreview, setMobilePreview] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
 
   // Cloud Data Presets
@@ -473,12 +476,14 @@ function App() {
       "y": -152
     },
     "pillow1": {
-      "x": -308.79296875,
-      "y": 18.9765625
+      "x": -140,
+      "y": 20,
+      "size": 180
     },
     "pillow2": {
-      "x": -228.90234375,
-      "y": 40.80078125
+      "x": 80,
+      "y": 50,
+      "size": 180
     },
     "founder1": {
       "x": 0,
@@ -502,10 +507,10 @@ function App() {
       "y": 0
     },
     "pegboard": {
-      "x": 311,
-      "y": -88,
-      "w": 787,
-      "h": 584,
+      "x": 20,
+      "y": 50,
+      "w": 390,
+      "h": 500,
       "locked": false
     },
     "labNote": {
@@ -554,13 +559,14 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      const mobileStatus = window.innerWidth <= 1024
+      const mobileStatus = window.innerWidth <= 1024 || mobilePreview
       setIsMobile(mobileStatus)
       setIsPortrait(window.innerHeight > window.innerWidth)
     }
+    handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [mobilePreview])
 
   // Derived current layout
   const uiLayout = isMobile ? mobileUi : desktopUi
@@ -806,8 +812,8 @@ function App() {
 
 
   return (
-    <div className={`app ${isMobile ? 'mobile-scroll' : ''}`}>
-      {isMobile && isPortrait && <RotateDevicePrompt />}
+    <div className={`app ${mobilePreview ? 'mobile-preview' : ''} ${isMobile ? 'mobile-scroll' : ''}`}>
+      {isMobile && isPortrait && !mobilePreview && <RotateDevicePrompt />}
       <div
         className="fixed-hero"
         style={{
@@ -1046,6 +1052,7 @@ function App() {
           <div className="panel-handle" style={{ marginBottom: 15, fontWeight: 'bold', fontSize: 14, cursor: 'grab', background: '#333', padding: '5px 10px', borderRadius: 6, textAlign: 'center' }}>:: 🛠️ MASTER DESIGNER ::</div>
           <div style={{ display: 'flex', gap: 10, marginBottom: 15 }}>
             <button onClick={() => setDesignMode(!designMode)} style={{ flex: 1, padding: '10px', background: designMode ? '#ef4444' : '#22c55e', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{designMode ? 'EXIT EDITOR' : 'ENTER EDITOR'}</button>
+            <button onClick={() => setMobilePreview(!mobilePreview)} style={{ flex: 1, padding: '10px', background: mobilePreview ? '#f59e0b' : '#6366f1', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{mobilePreview ? 'DESKTOP' : 'MOBILE'}</button>
             {designMode && <button onClick={saveLayout} style={{ flex: 1, padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>🚀 SAVE ALL</button>}
           </div>
 
