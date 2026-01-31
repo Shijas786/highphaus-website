@@ -1740,7 +1740,7 @@ body {
   }
 
   .misfit-copy {
-    font-size: 0.9rem !important;
+    font-size: 0.75rem !important;
     /* Made smaller */
     padding: 0 1rem;
     line-height: 1.5;
