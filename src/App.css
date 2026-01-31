@@ -307,14 +307,15 @@ body {
 }
 
 .hero-content p span {
-  background: rgba(10, 10, 10, 0.3);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  border-radius: 0;
+  border: none;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
 }
 
 .btn-group {
@@ -495,7 +496,7 @@ body {
 }
 
 .sky-description {
-  font-size: 1.15rem;
+  font-size: 1rem;
   color: #334155;
   /* Darker slate for better contrast */
   line-height: 1.7;
@@ -911,10 +912,11 @@ body {
 /* Misfit Section Redesign */
 .black-section {
   position: relative;
-  background-color: #000;
+  background: linear-gradient(to bottom, transparent 0%, #000 400px, #000 100%);
   width: 100%;
   min-height: 100vh;
-  padding: 10vw 0;
+  padding: calc(10vw + 200px) 0 10vw 0;
+  margin-top: -400px;
   z-index: 20;
   overflow: hidden;
 }
@@ -1717,5 +1719,272 @@ body {
 
   iframe {
     pointer-events: auto !important;
+  }
+}
+
+/* --- Scroll Animations --- */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-100 {
+  transition-delay: 0.1s;
+}
+
+.delay-200 {
+  transition-delay: 0.2s;
+}
+
+.delay-300 {
+  transition-delay: 0.3s;
+}
+
+/* --- FAQ Section --- */
+.faq-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('/faq_bg_money.png');
+  /* High quality original */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Space between content and footer */
+  padding-top: 6rem;
+  color: #fff;
+  z-index: 40;
+  image-rendering: auto;
+  /* Ensure browser default high quality scaling */
+}
+
+.faq-title {
+  text-align: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 3rem;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  width: 100%;
+}
+
+/* Split Layout for Questions */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20%;
+  /* Large gap in middle for the artwork */
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: flex-start;
+  padding-bottom: 350px;
+  /* Ensure space for the absolute footer */
+}
+
+.faq-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Glassy FAQ Card */
+.faq-item {
+  background: rgba(255, 255, 255, 0.15);
+  /* Light glassy fill */
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.faq-item-money {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  /* Critical: Remove blur */
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  /* Default shadow */
+}
+
+.faq-bg-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.faq-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  /* Use the original high-res image logic */
+  image-rendering: -webkit-optimize-contrast;
+  transform: scale(1.01);
+  transition: transform 0.5s ease;
+}
+
+.faq-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  /* Reduced from 0.4 */
+  transition: background 0.3s ease;
+}
+
+.faq-item-money:hover .faq-bg-image {
+  transform: scale(1.05);
+}
+
+.faq-item-money:hover .faq-bg-overlay {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.faq-item-money:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 215, 0, 0.8);
+}
+
+.faq-item-money span {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.faq-question {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #fff;
+  margin: 0;
+}
+
+/* Plus Icon */
+.faq-icon {
+  font-size: 1.2rem;
+  opacity: 0.7;
+  margin-left: 10px;
+}
+
+/* --- New Footer --- */
+.footer-section {
+  width: 100%;
+  background: linear-gradient(to top, #1a1a1a 0%, rgba(26, 26, 26, 0.8) 60%, transparent 100%);
+  padding: 6rem 5% 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.footer-left {
+  max-width: 400px;
+}
+
+.footer-left h2 {
+  font-family: 'Times New Roman', serif;
+  /* Or a nicer serif font */
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.footer-left p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+.footer-right {
+  display: flex;
+  gap: 4rem;
+}
+
+.footer-col h4 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-col a {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .faq-title {
+    font-size: 2.5rem;
+  }
+
+  .faq-grid {
+    grid-template-columns: 1fr;
+    /* Stack on mobile */
+    gap: 1rem;
+  }
+
+  .footer-section {
+    flex-direction: column;
+    gap: 3rem;
+    padding-bottom: 8rem;
+    /* Space for bottom nav if any */
+  }
+
+  .footer-right {
+    flex-wrap: wrap;
+    gap: 2rem;
   }
 }

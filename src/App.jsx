@@ -135,7 +135,7 @@ const ThrowablePillow = ({ id, src, initialPos, designMode, handleUIDrag, lights
         width: size !== 260 ? `${size}px` : 'clamp(100px, 20vw, 260px)',
         height: 'auto',
         cursor: designMode ? 'move' : 'grab',
-        zIndex: 100,
+        zIndex: initialPos.z || 100,
         touchAction: 'none',
         marginLeft: size !== 260 ? `-${offset}px` : '-130px',
         marginTop: size !== 260 ? `-${offset}px` : '-130px',
@@ -227,6 +227,26 @@ function App() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // --- Video Autoplay Logic ---
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVideoPlaying(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (videoRef.current) observer.observe(videoRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   // Designer Mode State & Selection
@@ -376,15 +396,18 @@ function App() {
   const desktopUiLayout = {
     "heroTitle": {
       "x": 12,
-      "y": -126
+      "y": -126,
+      "z": 50
     },
     "heroPara": {
       "x": 32,
-      "y": -119
+      "y": -119,
+      "z": 50
     },
     "heroBtn": {
       "x": 0,
-      "y": 0
+      "y": 0,
+      "z": 50
     },
     "skyTitle": {
       "x": -25,
@@ -399,17 +422,19 @@ function App() {
       "y": 0
     },
     "lightSwitch": {
-      "x": 648,
-      "y": 61,
+      "x": 0,
+      "y": 0,
       "z": 9999
     },
     "pillow1": {
       "x": -242.3515625,
-      "y": 13.23046875
+      "y": 13.23046875,
+      "z": 1
     },
     "pillow2": {
       "x": -190.3203125,
-      "y": 21.421875
+      "y": 21.421875,
+      "z": 1
     },
     "founder1": {
       "x": 0,
@@ -479,15 +504,18 @@ function App() {
   const mobileUiLayout = {
     "heroTitle": {
       "x": -9.333333333333371,
-      "y": -32.999999999999986
+      "y": -32.999999999999986,
+      "z": 50
     },
     "heroPara": {
       "x": -3.6666666666668277,
-      "y": -57.999999999999986
+      "y": -57.999999999999986,
+      "z": 50
     },
     "heroBtn": {
       "x": 0,
-      "y": 0
+      "y": 0,
+      "z": 50
     },
     "skyTitle": {
       "x": 25.666666666666572,
@@ -507,14 +535,16 @@ function App() {
       "z": 9999
     },
     "pillow1": {
-      "x": -100,
-      "y": 20,
-      "size": 90
+      "x": -92.66666666666663,
+      "y": 11.666666666666686,
+      "size": 90,
+      "z": 1
     },
     "pillow2": {
-      "x": -97.33333333333337,
-      "y": 17.333333333333314,
-      "size": 90
+      "x": -137,
+      "y": 10.666666666666629,
+      "size": 90,
+      "z": 1
     },
     "founder1": {
       "x": 0,
@@ -599,6 +629,21 @@ function App() {
     return () => window.removeEventListener('resize', handleResize)
   }, [mobilePreview])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach(el => observer.observe(el));
+
+    return () => elements.forEach(el => observer.unobserve(el));
+  }, [scrolled, designMode]); // Re-run if layout changes significantly
+
   // Derived current layout
   const uiLayout = isMobile ? mobileUi : desktopUi
 
@@ -611,6 +656,11 @@ function App() {
   const [lightsOn, setLightsOn] = useState(true)
   const heroContentRef = useRef(null)
   const panelRef = useRef(null)
+
+  // Video Playlist
+  const videoList = ['fwK7ggA3-bU']
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const nextVideo = () => setCurrentVideoIndex(prev => (prev + 1) % videoList.length)
 
   // Programmatic Mechanical Click Sound Generator
   const playSwitchSound = () => {
@@ -742,15 +792,43 @@ function App() {
 
   // Helpers for workshop section
   const renderLaptopIframe = () => (
-    <iframe
-      width="100%"
-      height="100%"
-      src="https://www.youtube.com/embed/wnHW6o8WMas?autoplay=0&mute=0&controls=1&modestbranding=1"
-      title="Laptop Screen Video"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    ></iframe>
+    <div ref={videoRef} style={{ width: '100%', height: '100%', position: 'relative', group: 'video-player' }}>
+      <iframe
+        width="100%"
+        height="100%"
+        src={`https://www.youtube.com/embed/${videoList[currentVideoIndex]}?autoplay=${videoPlaying ? 1 : 0}&mute=0&controls=1&modestbranding=1`}
+        title="Laptop Screen Video"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+
+      {/* Subtle Playlist Control */}
+      <button
+        onClick={(e) => { e.stopPropagation(); nextVideo(); }}
+        title="Next Video"
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          right: '10px',
+          background: 'rgba(0,0,0,0.6)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          color: 'white',
+          width: '24px',
+          height: '24px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          zIndex: 20,
+          fontSize: '10px',
+          backdropFilter: 'blur(4px)'
+        }}
+      >
+        ⏭
+      </button>
+    </div>
   )
 
   const renderPegboardContent = () => (
@@ -811,14 +889,24 @@ function App() {
                 <div className="card-pin"></div>
                 <div className="client-tag">{work.project}</div>
                 {work.image && (
-                  <div className="client-card-image">
+                  <div className="client-card-image" style={{ position: 'relative' }}>
                     <img src={work.image} alt={work.name} />
+
                   </div>
                 )}
                 <h4>{work.name}</h4>
                 <p>"{work.quote}"</p>
                 {work.instagram && (
-                  <a href={work.instagram} target="_blank" rel="noopener noreferrer" className="client-insta-link">
+                  <a
+                    href={work.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="client-insta-link"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    style={{ pointerEvents: 'auto', position: 'relative', zIndex: 50 }}
+                  >
                     <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                     {work.instagram.replace('https://www.instagram.com/', '@').replace(/\/$/, '')}
                   </a>
@@ -906,7 +994,8 @@ function App() {
       project: 'NUTRITION PLATFORM',
       image: '/nutribrunch.jpg',
       quote: "NutriBrunch is a nutrition-first food platform delivering fresh, Indian-inspired fruit and protein bowls. We focus on real food and oil-free recipes that fit naturally into daily routines. Through simple, affordable subscription plans, we help you build long-term healthy habits—one bowl at a time.",
-      instagram: 'https://www.instagram.com/nutribrunch.in/'
+      instagram: 'https://www.instagram.com/nutribrunch.in/',
+      link: 'https://nutribrunch.in'
     },
     { id: 2, name: 'Vidhi', project: 'ELARA', quote: "Highphaus connected me with a community of builders who challenged me to think bigger. The energy here gave me the confidence to go all in on my startup and set it on a path to grow." },
     { id: 3, name: 'Dev Mandal', project: 'MARKOV', quote: "Being at Highphaus was simply the most productive, fun and exhilarating months of my life! It gave me exactly the environment needed to launch my startup and meet incredible people." },
@@ -968,7 +1057,11 @@ function App() {
               handleUIDrag={handleUIDrag}
               selected={heroContentRef && selectedId === "lightSwitch"}
               locked={uiLayout.lightSwitch?.locked}
-              customStyle={{ position: 'absolute', top: '30px', left: '50%' }}
+              customStyle={{
+                position: 'absolute',
+                top: isMobile ? '30px' : '5%',
+                left: isMobile ? '50%' : '91%'
+              }}
             >
               <div
                 onClick={() => { setLightsOn(!lightsOn); playSwitchSound(); }}
@@ -994,12 +1087,13 @@ function App() {
 
             <Designable id="heroTitle" position={uiLayout.heroTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
               <h1 style={{ transform: `translateY(${scrollY * 0.2}px)`, opacity: Math.max(0, 1 - scrollY / 400), filter: `blur(${0.2 + scrollY * 0.02}px)` }}>
-                The media × startup lab<br />empowering founders.
+                <span className="animate-on-scroll" style={{ display: 'block' }}>The media × startup lab</span>
+                <span className="animate-on-scroll delay-100" style={{ display: 'block' }}>empowering founders.</span>
               </h1>
             </Designable>
             <Designable id="heroPara" position={uiLayout.heroPara} designMode={designMode} handleUIDrag={handleUIDrag}>
               <p style={{ transform: `translateY(${scrollY * 0.1}px)`, opacity: Math.max(0, 1 - scrollY / 300) }}>
-                <span>Highphaus brings young builders into shared environments labs, programs, and gatherings designed for making, learning, and shipping</span>
+                <span className="animate-on-scroll delay-200" style={{ display: 'inline-block' }}>Highphaus brings young builders into shared environments labs, programs, and gatherings designed for making, learning, and shipping</span>
               </p>
             </Designable>
 
@@ -1013,7 +1107,7 @@ function App() {
             <ThrowablePillow id="pillow2" src="/pillow_3.png" initialPos={uiLayout.pillow2} designMode={designMode} handleUIDrag={handleUIDrag} lightsOn={lightsOn} />
           </div>
         </header>
-      </div>
+      </div >
 
       <div className="cloud-bridge">{clouds.map(cloud => renderCloud(cloud))}</div>
       <div className="scrolling-content" style={{ minHeight: '150vh' }}>
@@ -1021,10 +1115,10 @@ function App() {
         <div className="container sky-content-container">
           <section className="content-section">
             <Designable id="skyTitle" position={uiLayout.skyTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
-              <h2 className="big-headline reveal">For the world’s best talents to go<br />full-time on what they love.</h2>
+              <h2 className="big-headline animate-on-scroll">For the world’s best talents to go<br />full-time on what they love.</h2>
             </Designable>
             <Designable id="skyPara" position={uiLayout.skyPara} designMode={designMode} handleUIDrag={handleUIDrag}>
-              <p className="sky-description reveal" style={{ marginTop: '2rem' }}>At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.</p>
+              <p className="sky-description animate-on-scroll delay-100" style={{ marginTop: '2rem' }}>At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.</p>
             </Designable>
           </section>
 
@@ -1035,10 +1129,10 @@ function App() {
       <section className="black-section">
         <div className="container page-core">
           <Designable id="pageTitle" position={uiLayout.pageTitle || { x: 0, y: 0 }} designMode={designMode} handleUIDrag={handleUIDrag}>
-            <h2 className="misfit-headline reveal">A mix of every <span>kind of modern builder.</span></h2>
+            <h2 className="misfit-headline animate-on-scroll">A mix of every <span>kind of modern builder.</span></h2>
           </Designable>
 
-          <p className="misfit-copy reveal" style={{ marginTop: '2rem' }}>
+          <p className="misfit-copy animate-on-scroll delay-100" style={{ marginTop: '2rem' }}>
             Builders, digital marketers, editors, videographers, and content creators — all under one roof.
             <br /><br />
             On any given day, you might be shipping a product next to someone editing a video, planning a campaign, or shaping content for the next launch.
@@ -1047,29 +1141,43 @@ function App() {
           <div className="misfit-row-container reveal">
             <div className="watermark-bg">be m</div>
             <div className="founders-carousel-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-              <button className="founder-nav-btn left" onClick={prevFounder}>←</button>
 
               <div className="founders-horizontal-row">
                 {isMobile ? (
                   /* Unified Mobile Container */
                   <Designable id="foundersContainer" position={uiLayout.foundersContainer || { x: 0, y: 0 }} designMode={designMode} handleUIDrag={handleUIDrag}>
                     <div style={{ display: 'flex', gap: '15px' }}>
-                      {visibleFounders.map(f => (
-                        <div key={f.id} className={`founder-circle ${f.isPlaceholder ? 'placeholder' : ''}`}>
+                      {visibleFounders.map((f, index) => (
+                        <motion.div
+                          key={f.id}
+                          className={`founder-circle ${f.isPlaceholder ? 'placeholder' : ''}`}
+                          initial={{ opacity: 0, scale: 0.2 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                          style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
+                        >
                           {f.isPlaceholder ? (
                             <div className="placeholder-content">???</div>
                           ) : (
                             <img src={f.src} alt="" />
                           )}
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   </Designable>
                 ) : (
                   /* Desktop Individual Items */
-                  visibleFounders.map(f => (
+                  visibleFounders.map((f, index) => (
                     <Designable key={f.id} id={f.id} position={uiLayout[f.id] || { x: 0, y: 0 }} designMode={designMode} handleUIDrag={handleUIDrag}>
-                      <div className={`founder-circle ${f.isPlaceholder ? 'placeholder' : ''}`}>
+                      <motion.div
+                        className={`founder-circle ${f.isPlaceholder ? 'placeholder' : ''}`}
+                        initial={{ opacity: 0, scale: 0.2 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                        style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
+                      >
                         {f.isPlaceholder ? (
                           <div className="placeholder-content">???</div>
                         ) : (
@@ -1082,13 +1190,12 @@ function App() {
                             )}
                           </>
                         )}
-                      </div>
+                      </motion.div>
                     </Designable>
                   ))
                 )}
               </div>
 
-              <button className="founder-nav-btn right" onClick={nextFounder}>→</button>
             </div>
           </div>
         </div>
@@ -1163,6 +1270,37 @@ function App() {
               </div>
             </>
           )}
+        </div>
+      </section>
+
+      <section className="faq-section">
+        <h2 className="faq-title animate-on-scroll">Frequently Asked Questions</h2>
+
+
+
+
+
+        <div className="footer-section">
+          <div className="footer-left">
+            <h2>Stay updated.</h2>
+            <p>Get notified about special events, opportunities and announcements.</p>
+          </div>
+          <div className="footer-right">
+            <div className="footer-col">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h4>Documentation</h4>
+              <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Conduct</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
