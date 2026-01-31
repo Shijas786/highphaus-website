@@ -1747,19 +1747,47 @@ body {
   }
 
   /* --- FAQ Mobile Tweaks --- */
+  /* --- FAQ Mobile Tweaks --- */
   .faq-title {
-    font-size: 2rem !important;
-    /* Smaller for mobile */
+    font-size: 1.4rem !important;
+    /* Even smaller (was 1.5rem) */
   }
 
   .faq-question {
-    font-size: 0.9rem !important;
+    font-size: 0.8rem !important;
     /* Smaller question text */
   }
 
   .faq-item {
     padding: 0.8rem 1rem !important;
     /* Compact padding */
+  }
+
+  /* --- Footer Mobile Tweaks --- */
+  .footer-left h2 {
+    font-size: 1.4rem !important;
+    /* Reduce Stay updated */
+  }
+
+  .footer-left p {
+    font-size: 0.7rem !important;
+    /* Reduce Get notified... */
+    line-height: 1.3;
+  }
+
+  .footer-col h4 {
+    font-size: 0.8rem !important;
+    /* Reduce Navigation headers */
+  }
+
+  .footer-col a {
+    font-size: 0.7rem !important;
+    /* Reduce Links */
+  }
+
+  .loader-text {
+    font-size: 12vw !important;
+    /* Ensure loader text isn't overwhelming on mobile */
   }
 }
 

@@ -34,6 +34,8 @@ function Model(props) {
 }
 
 export default function Dollar3D() {
+    const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Canvas camera={{ position: [0, 0, 15], fov: 45 }} gl={{ alpha: true, antialias: true, preserveDrawingBuffer: true }}>
@@ -42,10 +44,11 @@ export default function Dollar3D() {
                 <pointLight position={[-10, -10, -10]} />
                 <React.Suspense fallback={null}>
                     {/* Use a responsive hook or simple media query logic if available, otherwise just use a safe middle ground */}
-                    <Model scale={0.5} position={[0, -0.5, 0]} />
+                    {/* Scale slightly larger on mobile since we zoom out far */}
+                    <Model scale={isTouch ? 0.7 : 0.5} position={[0, -0.5, 0]} />
                 </React.Suspense>
-                {/* Touches on mobile rotate the model, scrolling still works on sides or if touch starts outside model */}
-                <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} enablePan={false} />
+                {/* Enable zoom for trackpads/touch/mouse - user accepts scroll trapping trade-off for full control */}
+                <OrbitControls enableZoom={true} autoRotate autoRotateSpeed={2} enablePan={false} />
             </Canvas>
         </div>
     )
