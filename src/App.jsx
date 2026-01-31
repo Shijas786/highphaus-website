@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, createRef } from 'react'
 import Draggable from 'react-draggable'
 import { Resizable } from 'react-resizable'
 import { motion, useMotionValue, AnimatePresence } from 'framer-motion'
+import Dollar3D from './Dollar3D'
 import './App.css'
 
 // --- Advanced Components Moved OUTSIDE to Prevent Re-creation on every state change ---
@@ -658,7 +659,7 @@ function App() {
   const panelRef = useRef(null)
 
   // Video Playlist
-  const videoList = ['YykjpeuMNEk', 'F9kXstb9FF4', 'eJnQBXmZ7Ek']
+  const videoList = ['YykjpeuMNEk', 'eJnQBXmZ7Ek']
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const nextVideo = () => setCurrentVideoIndex(prev => (prev + 1) % videoList.length)
 
@@ -1110,9 +1111,11 @@ function App() {
       </div >
 
       <div className="cloud-bridge">{clouds.map(cloud => renderCloud(cloud))}</div>
-      <div className="scrolling-content" style={{ minHeight: '150vh' }}>
-
-        <div className="container sky-content-container">
+      <div className="scrolling-content" style={{ minHeight: '150vh', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 50, pointerEvents: 'all' }}>
+          <Dollar3D />
+        </div>
+        <div className="container sky-content-container" style={{ position: 'relative', zIndex: 51, pointerEvents: 'none' }}>
           <section className="content-section">
             <Designable id="skyTitle" position={uiLayout.skyTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
               <h2 className="big-headline animate-on-scroll">For the world’s best talents to go<br />full-time on what they love.</h2>
@@ -1120,6 +1123,7 @@ function App() {
             <Designable id="skyPara" position={uiLayout.skyPara} designMode={designMode} handleUIDrag={handleUIDrag}>
               <p className="sky-description animate-on-scroll delay-100" style={{ marginTop: '2rem' }}>At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.</p>
             </Designable>
+
           </section>
 
 
@@ -1274,6 +1278,7 @@ function App() {
       </section>
 
       <section className="faq-section">
+
         <h2 className="faq-title animate-on-scroll">Frequently Asked Questions</h2>
 
 

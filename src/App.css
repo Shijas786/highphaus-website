@@ -468,6 +468,15 @@ body {
   color: #000;
 }
 
+/* Allow interaction with text elements */
+.content-section h2,
+.content-section p {
+  pointer-events: none;
+  /* Text is visually there but clicks pass through to 3D */
+  user-select: none;
+  /* Prevents text highlighting */
+}
+
 /* Second Section Content */
 .content-section {
   min-height: 50vh;
@@ -533,6 +542,8 @@ body {
   border-color: #334155;
   color: #1e293b;
 }
+
+
 
 /* Service Slider Styling */
 .service-slider-section {
@@ -1776,6 +1787,10 @@ body {
   margin-bottom: 2rem;
   text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   width: 100%;
+  position: relative;
+  z-index: 20;
+  pointer-events: none;
+  /* Let clicks pass through if needed, though title is usually not clickable */
 }
 
 /* Split Layout for Questions */
