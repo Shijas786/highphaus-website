@@ -658,7 +658,7 @@ function App() {
   const panelRef = useRef(null)
 
   // Video Playlist
-  const videoList = ['fwK7ggA3-bU']
+  const videoList = ['YykjpeuMNEk', 'F9kXstb9FF4', 'eJnQBXmZ7Ek']
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const nextVideo = () => setCurrentVideoIndex(prev => (prev + 1) % videoList.length)
 
