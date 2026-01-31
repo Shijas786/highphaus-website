@@ -1731,6 +1731,36 @@ body {
   iframe {
     pointer-events: auto !important;
   }
+
+  /* --- Misfit Section Mobile Tweaks --- */
+  .misfit-headline {
+    font-size: 2.8rem !important;
+    /* Made bigger (was likely smaller by default or inheritance) */
+    line-height: 1.1 !important;
+  }
+
+  .misfit-copy {
+    font-size: 0.9rem !important;
+    /* Made smaller */
+    padding: 0 1rem;
+    line-height: 1.5;
+  }
+
+  /* --- FAQ Mobile Tweaks --- */
+  .faq-title {
+    font-size: 2rem !important;
+    /* Smaller for mobile */
+  }
+
+  .faq-question {
+    font-size: 0.9rem !important;
+    /* Smaller question text */
+  }
+
+  .faq-item {
+    padding: 0.8rem 1rem !important;
+    /* Compact padding */
+  }
 }
 
 /* --- Scroll Animations --- */
