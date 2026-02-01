@@ -993,7 +993,7 @@ function App() {
       id: 1,
       name: 'NutriBrunch',
       project: 'NUTRITION PLATFORM',
-      image: '/nutribrunch.jpg',
+      image: '/nutribrunch.png',
       quote: "NutriBrunch is a nutrition-first food platform delivering fresh, Indian-inspired fruit and protein bowls. We focus on real food and oil-free recipes that fit naturally into daily routines. Through simple, affordable subscription plans, we help you build long-term healthy habits—one bowl at a time.",
       instagram: 'https://www.instagram.com/nutribrunch.in/',
       link: 'https://nutribrunch.in'
