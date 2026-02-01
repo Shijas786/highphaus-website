@@ -494,7 +494,7 @@ body {
 .big-headline {
   font-family: serif;
   /* Using standard serif for the editorial look */
-  font-size: clamp(2rem, 4.5vw, 4rem);
+  font-size: 5rem;
   color: #334155;
   /* Refined charcoal gray */
   line-height: 1.1;
@@ -774,8 +774,9 @@ body {
 
   /* Sky Section Typography */
   .big-headline {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     padding: 0 20px;
+    word-wrap: break-word;
   }
 
   .sky-description {
@@ -1139,6 +1140,43 @@ body {
 
   .founder-nav-btn {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .black-section {
+    min-height: auto;
+    padding: 15rem 0 3rem 0;
+    /* Reduced top padding */
+    margin-top: -10rem;
+    /* Less negative margin */
+  }
+
+  .misfit-copy {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    padding: 0 1.5rem;
+  }
+
+  .misfit-row-container {
+    padding: 2rem 0;
+    min-height: auto;
+  }
+
+  .founder-circle {
+    width: 90px;
+    height: 90px;
+  }
+
+  .founders-horizontal-row {
+    padding-left: 50%;
+    /* Center the first item initially or just simple padding */
+    padding-right: 20px;
+    justify-content: flex-start;
+    margin-left: -40px;
+    /* Slight offset correction if needed, but let's stick to simple padding */
+    margin: 0;
+    padding: 0 1rem;
   }
 }
 
