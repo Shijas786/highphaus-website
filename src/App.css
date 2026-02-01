@@ -494,7 +494,7 @@ body {
 .big-headline {
   font-family: serif;
   /* Using standard serif for the editorial look */
-  font-size: 5rem;
+  font-size: clamp(2rem, 4.5vw, 4rem);
   color: #334155;
   /* Refined charcoal gray */
   line-height: 1.1;
@@ -774,9 +774,8 @@ body {
 
   /* Sky Section Typography */
   .big-headline {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     padding: 0 20px;
-    word-wrap: break-word;
   }
 
   .sky-description {

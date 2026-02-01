@@ -398,16 +398,12 @@ function App() {
     "heroTitle": {
       "x": 12,
       "y": -126,
-      "z": 50,
-      "w": 1000,
-      "h": 300
+      "z": 50
     },
     "heroPara": {
       "x": 32,
       "y": -119,
-      "z": 50,
-      "w": 600,
-      "h": 200
+      "z": 50
     },
     "heroBtn": {
       "x": 0,
@@ -416,15 +412,11 @@ function App() {
     },
     "skyTitle": {
       "x": -25,
-      "y": 228,
-      "w": 1000,
-      "h": 400
+      "y": 228
     },
     "skyPara": {
       "x": -4,
-      "y": 358,
-      "w": 800,
-      "h": 200
+      "y": 358
     },
     "serviceSlider": {
       "x": 0,
@@ -514,16 +506,12 @@ function App() {
     "heroTitle": {
       "x": -9.333333333333371,
       "y": -32.999999999999986,
-      "z": 50,
-      "w": 350,
-      "h": 150
+      "z": 50
     },
     "heroPara": {
       "x": -3.6666666666668277,
       "y": -57.999999999999986,
-      "z": 50,
-      "w": 320,
-      "h": 150
+      "z": 50
     },
     "heroBtn": {
       "x": 0,
@@ -532,15 +520,11 @@ function App() {
     },
     "skyTitle": {
       "x": 25.666666666666572,
-      "y": 62.333333333333314,
-      "w": 350,
-      "h": 250
+      "y": 62.333333333333314
     },
     "skyPara": {
       "x": 24,
-      "y": 133.66666666666652,
-      "w": 320,
-      "h": 150
+      "y": 133.66666666666652
     },
     "serviceSlider": {
       "x": 0,
@@ -1104,29 +1088,17 @@ function App() {
             </Designable>
 
 
-            <AdvancedDesigner
-              id="heroTitle"
-              uiLayout={uiLayout}
-              setUiLayout={setUiLayout}
-              handleUIDrag={handleUIDrag}
-              designMode={designMode}
-            >
-              <h1 style={{ width: '100%', height: '100%', transform: `translateY(${scrollY * 0.2}px)`, opacity: Math.max(0, 1 - scrollY / 400), filter: `blur(${0.2 + scrollY * 0.02}px)` }}>
+            <Designable id="heroTitle" position={uiLayout.heroTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <h1 style={{ transform: `translateY(${scrollY * 0.2}px)`, opacity: Math.max(0, 1 - scrollY / 400), filter: `blur(${0.2 + scrollY * 0.02}px)` }}>
                 <span className="animate-on-scroll" style={{ display: 'block' }}>The media × startup lab</span>
                 <span className="animate-on-scroll delay-100" style={{ display: 'block' }}>empowering founders.</span>
               </h1>
-            </AdvancedDesigner>
-            <AdvancedDesigner
-              id="heroPara"
-              uiLayout={uiLayout}
-              setUiLayout={setUiLayout}
-              handleUIDrag={handleUIDrag}
-              designMode={designMode}
-            >
-              <p style={{ width: '100%', height: '100%', transform: `translateY(${scrollY * 0.1}px)`, opacity: Math.max(0, 1 - scrollY / 300) }}>
+            </Designable>
+            <Designable id="heroPara" position={uiLayout.heroPara} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <p style={{ transform: `translateY(${scrollY * 0.1}px)`, opacity: Math.max(0, 1 - scrollY / 300) }}>
                 <span className="animate-on-scroll delay-200" style={{ display: 'inline-block' }}>Highphaus brings young builders into shared environments labs, programs, and gatherings designed for making, learning, and shipping</span>
               </p>
-            </AdvancedDesigner>
+            </Designable>
 
             <Designable id="heroBtn" position={uiLayout.heroBtn} designMode={designMode} handleUIDrag={handleUIDrag}>
               <div className="btn-group" style={{ marginBottom: '4rem' }}>
@@ -1147,26 +1119,14 @@ function App() {
         </div>
         <div className="container sky-content-container" style={{ position: 'relative', zIndex: 51, pointerEvents: 'none' }}>
           <section className="content-section">
-            <AdvancedDesigner
-              id="skyTitle"
-              uiLayout={uiLayout}
-              setUiLayout={setUiLayout}
-              handleUIDrag={handleUIDrag}
-              designMode={designMode}
-            >
-              <h2 className="big-headline animate-on-scroll" style={{ width: '100%', height: '100%', fontFamily: '"Caveat", cursive', fontWeight: 500, lineHeight: 1.1, color: '#f8fafc', textShadow: '0 4px 12px rgba(0,0,0,0.15)', letterSpacing: '1px' }}>For the world’s best talents to go<br />full-time on what they love.</h2>
-            </AdvancedDesigner>
-            <AdvancedDesigner
-              id="skyPara"
-              uiLayout={uiLayout}
-              setUiLayout={setUiLayout}
-              handleUIDrag={handleUIDrag}
-              designMode={designMode}
-            >
-              <p className="sky-description animate-on-scroll delay-100" style={{ width: '100%', height: '100%', marginTop: '0', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+            <Designable id="skyTitle" position={uiLayout.skyTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <h2 className="big-headline animate-on-scroll">For the world’s best talents to go<br />full-time on what they love.</h2>
+            </Designable>
+            <Designable id="skyPara" position={uiLayout.skyPara} designMode={designMode} handleUIDrag={handleUIDrag}>
+              <p className="sky-description animate-on-scroll delay-100" style={{ marginTop: '2rem' }}>
                 At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.
               </p>
-            </AdvancedDesigner>
+            </Designable>
 
           </section>
 
@@ -1176,15 +1136,9 @@ function App() {
 
       <section className="black-section">
         <div className="container page-core">
-          <AdvancedDesigner
-            id="pageTitle"
-            uiLayout={uiLayout}
-            setUiLayout={setUiLayout}
-            handleUIDrag={handleUIDrag}
-            designMode={designMode}
-          >
-            <h2 className="misfit-headline animate-on-scroll" style={{ width: '100%', height: '100%' }}>A mix of every <span>kind of modern builder.</span></h2>
-          </AdvancedDesigner>
+          <Designable id="pageTitle" position={uiLayout.pageTitle || { x: 0, y: 0 }} designMode={designMode} handleUIDrag={handleUIDrag}>
+            <h2 className="misfit-headline animate-on-scroll">A mix of every <span>kind of modern builder.</span></h2>
+          </Designable>
 
           <p className="misfit-copy animate-on-scroll delay-100" style={{ marginTop: '2rem' }}>
             Builders, digital marketers, editors, videographers, and content creators — all under one roof.
@@ -1361,43 +1315,7 @@ function App() {
 
       <div className="loader"><div className="loader-text">highphaus</div></div>
 
-      {/* --- Designer Toggle --- */}
-      <button
-        style={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          zIndex: 10000,
-          padding: '10px 20px',
-          background: 'red',
-          color: 'white',
-          border: 'none',
-          borderRadius: 5,
-          cursor: 'pointer',
-          fontFamily: 'monospace',
-          fontWeight: 'bold'
-        }}
-        onClick={() => setDesignMode(!designMode)}
-      >
-        {designMode ? "DISABLE DESIGNER" : "ENABLE DESIGNER"}
-      </button>
 
-      {designMode && (
-        <div style={{
-          position: 'fixed',
-          bottom: 70,
-          right: 20,
-          zIndex: 10000,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 10
-        }}>
-          <button onClick={saveLayout} style={{ padding: 10 }}>Save Json</button>
-          <button onClick={() => setMobilePreview(!mobilePreview)} style={{ padding: 10 }}>
-            {mobilePreview ? "Desktop View" : "Mobile View"}
-          </button>
-        </div>
-      )}
 
 
 
