@@ -1312,54 +1312,7 @@ function App() {
       <div className="loader"><div className="loader-text">highphaus</div></div>
 
 
-      <Draggable handle=".panel-handle" nodeRef={panelRef}>
-        <div ref={panelRef} className="designer-panel" style={{ position: 'fixed', bottom: 20, right: 20, background: 'rgba(10,10,10,0.95)', padding: 20, borderRadius: 12, zIndex: 99999, color: 'white', width: 320, boxShadow: '0 20px 40px rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
-          <div className="panel-handle" style={{ marginBottom: 15, fontWeight: 'bold', fontSize: 14, cursor: 'grab', background: '#333', padding: '5px 10px', borderRadius: 6, textAlign: 'center' }}>:: 🛠️ MASTER DESIGNER ::</div>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 15 }}>
-            <button onClick={() => setDesignMode(!designMode)} style={{ flex: 1, padding: '10px', background: designMode ? '#ef4444' : '#22c55e', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{designMode ? 'EXIT EDITOR' : 'ENTER EDITOR'}</button>
-            <button onClick={() => setMobilePreview(!mobilePreview)} style={{ flex: 1, padding: '10px', background: mobilePreview ? '#f59e0b' : '#6366f1', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>{mobilePreview ? 'DESKTOP' : 'MOBILE'}</button>
-            {designMode && <button onClick={saveLayout} style={{ flex: 1, padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 'bold' }}>🚀 SAVE ALL</button>}
-          </div>
 
-          {designMode && (
-            <div style={{ overflowY: 'auto', flex: 1 }}>
-              <div style={{ marginBottom: 10, fontSize: 12, fontWeight: 'bold', borderBottom: '1px solid #333', paddingBottom: 5 }}>LAYERS (Select | Lock | Front)</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 15 }}>
-                {Object.keys(uiLayout).map(key => {
-                  const item = uiLayout[key]
-                  const isSelected = selectedId === key
-                  const isLocked = item.locked
-                  return (
-                    <div
-                      key={key}
-                      onClick={() => setSelectedId(key)}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        background: isSelected ? '#3b82f6' : '#222',
-                        padding: '5px 10px',
-                        borderRadius: 4,
-                        fontSize: 11,
-                        cursor: 'pointer',
-                        border: isSelected ? '1px solid #60a5fa' : '1px solid transparent'
-                      }}>
-                      <span style={{ fontWeight: isSelected ? 'bold' : 'normal', opacity: isLocked ? 0.5 : 1 }}>
-                        {isLocked ? '🔒 ' : ''}{key}
-                      </span>
-                      <div style={{ display: 'flex', gap: 5 }}>
-                        <button onClick={(e) => { e.stopPropagation(); toggleLock(key); }} style={{ cursor: 'pointer', background: isLocked ? '#f59e0b' : '#333', border: 'none', color: '#fff', borderRadius: 4, padding: '2px 6px', opacity: 0.9 }}>{isLocked ? 'Unlock' : 'Lock'}</button>
-                        <button onClick={(e) => { e.stopPropagation(); bringToFront(key); }} style={{ cursor: 'pointer', background: '#444', border: 'none', color: '#fff', borderRadius: 4, padding: '2px 6px' }}>↑</button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <textarea readOnly style={{ width: '100%', height: 100, background: '#000', color: '#4ade80', border: '1px solid #333', borderRadius: 6, fontSize: 10, fontFamily: 'monospace', padding: 10, resize: 'none' }} value={JSON.stringify({ clouds, ui: uiLayout }, null, 2)} />
-            </div>
-          )}
-        </div>
-      </Draggable>
     </div >
   )
 }

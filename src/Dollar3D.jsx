@@ -37,7 +37,14 @@ export default function Dollar3D() {
     const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
     return (
-        <div style={{ width: '100%', height: '100%' }}>
+        <div
+            style={{
+                width: '100%',
+                height: '100%',
+                touchAction: 'none',
+                cursor: 'grab' // Simple grab cursor for rotation
+            }}
+        >
             <Canvas camera={{ position: [0, 0, 15], fov: 45 }} gl={{ alpha: true, antialias: true, preserveDrawingBuffer: true }}>
                 <ambientLight intensity={1.2} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
@@ -47,8 +54,12 @@ export default function Dollar3D() {
                     {/* Scale slightly larger on mobile since we zoom out far */}
                     <Model scale={isTouch ? 0.7 : 0.5} position={[0, -0.5, 0]} />
                 </React.Suspense>
-                {/* Enable zoom for trackpads/touch/mouse - user accepts scroll trapping trade-off for full control */}
-                <OrbitControls enableZoom={true} autoRotate autoRotateSpeed={2} enablePan={false} />
+                {/* 
+                    Zoom: Disabled completely.
+                    Panning: Disabled.
+                    Only rotation is enabled.
+                */}
+                <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} enablePan={false} />
             </Canvas>
         </div>
     )
