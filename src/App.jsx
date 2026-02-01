@@ -1118,10 +1118,12 @@ function App() {
         <div className="container sky-content-container" style={{ position: 'relative', zIndex: 51, pointerEvents: 'none' }}>
           <section className="content-section">
             <Designable id="skyTitle" position={uiLayout.skyTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
-              <h2 className="big-headline animate-on-scroll">For the world’s best talents to go<br />full-time on what they love.</h2>
+              <h2 className="big-headline animate-on-scroll" style={{ fontFamily: '"Caveat", cursive', fontWeight: 500, lineHeight: 1.1, color: '#f8fafc', textShadow: '0 4px 12px rgba(0,0,0,0.15)', letterSpacing: '1px', fontSize: '5rem' }}>For the world’s best talents to go<br />full-time on what they love.</h2>
             </Designable>
             <Designable id="skyPara" position={uiLayout.skyPara} designMode={designMode} handleUIDrag={handleUIDrag}>
-              <p className="sky-description animate-on-scroll delay-100" style={{ marginTop: '2rem' }}>At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.</p>
+              <p className="sky-description animate-on-scroll delay-100" style={{ marginTop: '2rem', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+                At Highp haus, builders work alongside other builders designers, developers, marketers, and founders — sharing context, feedback, and energy in real time.
+              </p>
             </Designable>
 
           </section>
