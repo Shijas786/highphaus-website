@@ -1287,38 +1287,43 @@ function App() {
       </section>
 
       <section className="join-section">
-        <div className="join-bg-overlay-cinematic"></div>
-        <div className="container join-content-cinematic">
+        <div className="join-content-cinematic">
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.3,
-                  delayChildren: 0.2
-                }
-              }
-            }}
+            viewport={{ once: true }}
           >
-            <motion.h2
-              className="join-title-cinematic"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
-              }}
-            >
-              The doors are open.
+            <div className="join-bg-spotlight"></div>
+
+            <motion.h2 className="join-title-cinematic">
+              {"The doors are open.".split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  style={{ display: 'inline-block', marginRight: '0.25em' }}
+                  variants={{
+                    hidden: { opacity: 0, y: 20, filter: 'blur(10px)' },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: 'blur(0px)',
+                      transition: {
+                        duration: 0.8,
+                        delay: i * 0.2,
+                        ease: [0.2, 0.65, 0.3, 0.9]
+                      }
+                    }
+                  }}
+                >
+                  {word}
+                </motion.span>
+              ))}
             </motion.h2>
 
             <motion.p
               className="join-subtitle-cinematic"
               variants={{
                 hidden: { opacity: 0, y: 15 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 1, ease: "easeOut" } }
               }}
             >
               Join the founders lab and work alongside the world's best talents.
@@ -1326,8 +1331,8 @@ function App() {
 
             <motion.div
               variants={{
-                hidden: { opacity: 0, scale: 0.95 },
-                visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } }
+                hidden: { opacity: 0, y: 10 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 1.4, ease: "easeOut" } }
               }}
             >
               <a
