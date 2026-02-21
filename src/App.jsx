@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, createRef } from 'react'
 import Draggable from 'react-draggable'
 import { Resizable } from 'react-resizable'
 import { motion, useMotionValue, AnimatePresence } from 'framer-motion'
-import Dollar3D from './Dollar3D'
+
 import './App.css'
 
 // --- Advanced Components Moved OUTSIDE to Prevent Re-creation on every state change ---
@@ -1114,9 +1114,7 @@ function App() {
 
       <div className="cloud-bridge">{clouds.map(cloud => renderCloud(cloud))}</div>
       <div className="scrolling-content" style={{ minHeight: '150vh', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 50, pointerEvents: 'all' }}>
-          <Dollar3D />
-        </div>
+
         <div className="container sky-content-container" style={{ position: 'relative', zIndex: 51, pointerEvents: 'none' }}>
           <section className="content-section">
             <Designable id="skyTitle" position={uiLayout.skyTitle} designMode={designMode} handleUIDrag={handleUIDrag}>
