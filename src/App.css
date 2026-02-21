@@ -1900,12 +1900,15 @@ body {
 
 .join-title-cinematic {
   font-family: var(--font-main);
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-size: clamp(2rem, 8vw, 4.2rem);
   font-weight: 600;
-  color: #fff;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  color: #fff9f0;
+  /* Homepage hero color */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   margin-bottom: 2rem;
+  /* Sophisticated Golden Glow from Homepage */
+  text-shadow: 0 0 50px rgba(251, 191, 36, 0.3), 0 0 20px rgba(251, 191, 36, 0.15);
 }
 
 .join-subtitle-cinematic {
