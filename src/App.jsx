@@ -1281,13 +1281,26 @@ function App() {
         </div>
       </section>
 
-      <section className="faq-section">
-
-        <h2 className="faq-title animate-on-scroll">Frequently Asked Questions</h2>
-
-
-
-
+      <section className="join-section">
+        <div className="container join-content">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="join-title">READY TO BUILD THE FUTURE?</h2>
+            <p className="join-subtitle">Join the founders lab and work alongside the world's best talents.</p>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSc1KtAXFQGX-yP_pQnV233r1T-awidpjVGefWdE6Ciqg4Ocsw/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="join-btn"
+            >
+              JOIN THE HAUS ↗
+            </a>
+          </motion.div>
+        </div>
 
         <div className="footer-section">
           <div className="footer-left">
