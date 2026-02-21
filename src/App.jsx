@@ -1112,11 +1112,6 @@ function App() {
               </p>
             </Designable>
 
-            <Designable id="heroBtn" position={uiLayout.heroBtn} designMode={designMode} handleUIDrag={handleUIDrag}>
-              <div className="btn-group" style={{ marginBottom: '4rem' }}>
-                <a href="#join" className="btn btn-outline">APPLY NOW ↗</a>
-              </div>
-            </Designable>
 
             <ThrowablePillow id="pillow1" src="/pillow_1.png" initialPos={uiLayout.pillow1} designMode={designMode} handleUIDrag={handleUIDrag} lightsOn={lightsOn} />
             <ThrowablePillow id="pillow2" src="/pillow_3.png" initialPos={uiLayout.pillow2} designMode={designMode} handleUIDrag={handleUIDrag} lightsOn={lightsOn} />
