@@ -1304,13 +1304,13 @@ function App() {
             viewport={{ amount: 0.6 }}
           />
         </div>
+        <div className="join-bg-spotlight"></div>
         <div className="join-content-cinematic">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <div className="join-bg-spotlight"></div>
 
             <motion.h2 className="join-title-cinematic">
               {"The doors are open.".split(" ").map((word, i) => (
