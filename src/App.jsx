@@ -1292,55 +1292,59 @@ function App() {
       </section>
 
       <section className="join-section">
-        {/* Floating Background Stickers */}
-        <motion.img
-          src="/cat_sticker.png"
-          className="floating-sticker sticker-cat"
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, -5, 0],
-            x: [0, 10, 0]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.img
-          src="/cow_sticker.png"
-          className="floating-sticker sticker-cow"
-          animate={{
-            y: [0, 15, 0],
-            rotate: [0, -8, 8, 0],
-            x: [0, -15, 0]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        <div className="container join-container-physical">
-          <Designable
-            id="joinInvitation"
-            position={uiLayout.joinInvitation}
-            designMode={designMode}
-            handleUIDrag={handleUIDrag}
+        <div className="join-bg-overlay-cinematic"></div>
+        <div className="container join-content-cinematic">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.3,
+                  delayChildren: 0.2
+                }
+              }
+            }}
           >
-            <div className="join-note-wrapper">
-              <img src="/push_pin.png" className="note-pin" alt="" />
-              <div className="join-note">
-                <img src="/torn_edge.png" className="note-edge top" alt="" />
-                <img src="/torn_edge.png" className="note-edge bottom" alt="" />
+            <motion.h2
+              className="join-title-cinematic"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
+              }}
+            >
+              THE DOORS ARE <span className="join-accent-cinematic">open.</span>
+            </motion.h2>
 
-                <h2 className="join-title">THE DOORS ARE <span className="join-accent">OPEN.</span></h2>
-                <p className="join-subtitle">Join the founders lab and work alongside the world's best talents.</p>
+            <motion.p
+              className="join-subtitle-cinematic"
+              variants={{
+                hidden: { opacity: 0, y: 15 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+              }}
+            >
+              Join the founders lab and work alongside the world's best talents.
+            </motion.p>
 
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSc1KtAXFQGX-yP_pQnV233r1T-awidpjVGefWdE6Ciqg4Ocsw/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="join-btn-physical"
-                >
-                  JOIN THE HAUS ↗
-                </a>
-              </div>
-            </div>
-          </Designable>
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, scale: 0.95 },
+                visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } }
+              }}
+            >
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSc1KtAXFQGX-yP_pQnV233r1T-awidpjVGefWdE6Ciqg4Ocsw/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="join-btn-cinematic"
+              >
+                JOIN THE HAUS ↗
+              </a>
+            </motion.div>
+          </motion.div>
         </div>
 
         <div className="footer-section">
