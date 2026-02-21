@@ -1368,7 +1368,7 @@ function App() {
 
         <div className="footer-section">
           <a
-            href="https://www.instagram.com/highphaus.in/"
+            href="https://www.instagram.com/highphaus/"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-insta-link"
