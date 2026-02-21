@@ -1871,138 +1871,84 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 6rem;
-  color: #fff;
+  overflow: hidden;
   z-index: 40;
 }
 
-.join-content {
-  display: none;
-}
-
-.join-container-physical {
-  width: 100%;
-  height: 100%;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  perspective: 1000px;
-}
-
-.join-note-wrapper {
-  position: relative;
-  z-index: 10;
-}
-
-.note-pin {
+.join-bg-overlay-cinematic {
   position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  z-index: 20;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-  pointer-events: none;
-}
-
-.join-note {
-  background: #fdfdfd;
-  padding: 3.5rem 2.5rem;
-  width: 450px;
-  max-width: 90vw;
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.2),
-    0 5px 15px rgba(0, 0, 0, 0.1);
-  transform: rotate(-1deg);
-  position: relative;
-  transition: transform 0.3s ease;
-}
-
-.join-note:hover {
-  transform: rotate(0deg) scale(1.02);
-}
-
-.note-edge {
-  position: absolute;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 20px;
-  object-fit: cover;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.85) 100%);
+  z-index: 1;
   pointer-events: none;
 }
 
-.note-edge.top {
-  top: -10px;
-  transform: scaleY(-1);
+.join-content-cinematic {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  padding: 0 20px;
 }
 
-.note-edge.bottom {
-  bottom: -10px;
-}
-
-.join-title {
+.join-title-cinematic {
   font-family: var(--font-heading);
-  font-size: 2.2rem;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
-  text-align: center;
-}
-
-.join-subtitle {
-  font-family: var(--font-main);
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 2.5rem;
-  max-width: 100%;
-  line-height: 1.6;
-  text-align: center;
-}
-
-.join-btn-physical {
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  background: #000;
+  /* DM Serif Display */
+  font-size: clamp(3rem, 10vw, 6rem);
   color: #fff;
-  text-align: center;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.join-accent-cinematic {
+  font-family: 'Zeyada', cursive;
+  color: #ffd700;
+  text-transform: lowercase;
+  font-size: 0.8em;
+  display: inline-block;
+  margin-left: 0.1em;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+}
+
+.join-subtitle-cinematic {
+  font-family: var(--font-main);
+  /* Inter */
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 550px;
+  margin: 0 auto 3.5rem;
+  line-height: 1.6;
+}
+
+.join-btn-cinematic {
+  display: inline-block;
+  padding: 1rem 3rem;
+  background: #fff;
+  color: #000;
   font-family: var(--font-main);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   text-decoration: none;
-  border-radius: 2px;
-  transition: all 0.3s ease;
+  border-radius: 4px;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
 }
 
-.join-btn-physical:hover {
+.join-btn-cinematic:hover {
   background: #ffd700;
-  color: #000;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-}
-
-/* Floating Stickers */
-.floating-sticker {
-  position: absolute;
-  width: clamp(80px, 10vw, 150px);
-  pointer-events: none;
-  z-index: 5;
-  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
-  opacity: 0.7;
-}
-
-.sticker-cat {
-  top: 15%;
-  left: 10%;
-}
-
-.sticker-cow {
-  bottom: 20%;
-  right: 12%;
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.25);
 }
 
 /* --- New Footer --- */
@@ -2072,12 +2018,12 @@ body {
 }
 
 @media (max-width: 768px) {
-  .join-title {
-    font-size: 1.8rem;
+  .join-title-cinematic {
+    font-size: 2.8rem;
   }
 
-  .join-note {
-    padding: 2.5rem 1.5rem;
+  .join-subtitle-cinematic {
+    margin-bottom: 2.5rem;
   }
 
   .footer-section {
