@@ -1976,14 +1976,14 @@ body {
 
 .join-btn-cinematic:hover {
   opacity: 1;
-  color: #ffd700;
+  color: #fff9f0;
   letter-spacing: 0.25em;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .join-btn-cinematic:hover::after {
   transform: scaleX(1);
-  background: #ffd700;
+  background: #fff9f0;
   opacity: 1;
 }
 
