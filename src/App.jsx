@@ -1023,9 +1023,9 @@ function App() {
   const [founderIndex, setFounderIndex] = useState(0)
   const allFounders = [
     { id: "founder1", src: "/founder_anim_1.png", note: "CHIEF BRAND & CREATIVE CONTENT STRATEGIST" },
-    { id: "founder2", src: "/founder_anim_2.png" },
+    { id: "founder2", src: "/founder_anim_2.png", note: "FILMMAKER SHIPPING STORIES THROUGH LENS AND EDIT" },
     { id: "founder3", src: "/founder_anim_3.png", note: "A WEB3 BUILDER SHIPPING ONCHAIN PRODUCT" },
-    { id: "founder4", src: "/founder_anim_4.png" },
+    { id: "founder4", src: "/founder_anim_4.png", note: "DIGITAL MARKETING STRATEGIST AND PERFORMING ARTIST" },
     { id: "founder5", src: "/founder_anim_5.png" },
     { id: "upcoming_1", isPlaceholder: true },
     { id: "upcoming_2", isPlaceholder: true },
