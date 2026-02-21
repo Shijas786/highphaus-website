@@ -501,6 +501,11 @@ function App() {
     "foundersContainer": {
       "x": 0,
       "y": 0
+    },
+    "joinInvitation": {
+      "x": 0,
+      "y": -50,
+      "z": 100
     }
   }
 
@@ -611,6 +616,11 @@ function App() {
     "foundersContainer": {
       "x": 123.6666666666668,
       "y": 1
+    },
+    "joinInvitation": {
+      "x": 0,
+      "y": 0,
+      "z": 100
     }
   }
 
@@ -1282,24 +1292,55 @@ function App() {
       </section>
 
       <section className="join-section">
-        <div className="container join-content">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+        {/* Floating Background Stickers */}
+        <motion.img
+          src="/cat_sticker.png"
+          className="floating-sticker sticker-cat"
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 5, -5, 0],
+            x: [0, 10, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.img
+          src="/cow_sticker.png"
+          className="floating-sticker sticker-cow"
+          animate={{
+            y: [0, 15, 0],
+            rotate: [0, -8, 8, 0],
+            x: [0, -15, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <div className="container join-container-physical">
+          <Designable
+            id="joinInvitation"
+            position={uiLayout.joinInvitation}
+            designMode={designMode}
+            handleUIDrag={handleUIDrag}
           >
-            <h2 className="join-title">THE DOORS ARE <span className="join-accent">OPEN.</span></h2>
-            <p className="join-subtitle">Join the founders lab and work alongside the world's best talents.</p>
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSc1KtAXFQGX-yP_pQnV233r1T-awidpjVGefWdE6Ciqg4Ocsw/viewform"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="join-btn"
-            >
-              JOIN THE HAUS ↗
-            </a>
-          </motion.div>
+            <div className="join-note-wrapper">
+              <img src="/push_pin.png" className="note-pin" alt="" />
+              <div className="join-note">
+                <img src="/torn_edge.png" className="note-edge top" alt="" />
+                <img src="/torn_edge.png" className="note-edge bottom" alt="" />
+
+                <h2 className="join-title">THE DOORS ARE <span className="join-accent">OPEN.</span></h2>
+                <p className="join-subtitle">Join the founders lab and work alongside the world's best talents.</p>
+
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSc1KtAXFQGX-yP_pQnV233r1T-awidpjVGefWdE6Ciqg4Ocsw/viewform"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="join-btn-physical"
+                >
+                  JOIN THE HAUS ↗
+                </a>
+              </div>
+            </div>
+          </Designable>
         </div>
 
         <div className="footer-section">
