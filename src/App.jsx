@@ -3,6 +3,8 @@ import Draggable from 'react-draggable'
 import { Resizable } from 'react-resizable'
 import { motion, useMotionValue, AnimatePresence } from 'framer-motion'
 
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import './App.css'
 
 // --- Advanced Components Moved OUTSIDE to Prevent Re-creation on every state change ---
@@ -1311,12 +1313,10 @@ function App() {
         </div>
       </section>
 
+
       <div className="loader"><div className="loader-text">highphaus</div></div>
-
-
-
-
-
+      <Analytics />
+      <SpeedInsights />
     </div >
   )
 }
