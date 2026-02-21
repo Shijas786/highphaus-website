@@ -256,6 +256,7 @@ function App() {
   const [designMode, setDesignMode] = useState(false)
   const [mobilePreview, setMobilePreview] = useState(false)
   const [selectedId, setSelectedId] = useState(null)
+  const [isJoinHovered, setIsJoinHovered] = useState(false)
 
   // Cloud Data Presets
   const desktopCloudData = [
@@ -1286,7 +1287,23 @@ function App() {
         </div>
       </section>
 
-      <section className="join-section">
+      <section className="join-section" id="join-section">
+        <div className="join-bg-wrapper">
+          <motion.img
+            src="/faq_bg_money.png"
+            alt="Money Background"
+            className="join-bg-money"
+            initial={{ opacity: 0 }}
+            whileInView={{
+              opacity: (window.innerWidth <= 768 || isJoinHovered) ? 0.45 : 0
+            }}
+            animate={{
+              opacity: (window.innerWidth <= 768 || isJoinHovered) ? 0.45 : 0
+            }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            viewport={{ amount: 0.6 }}
+          />
+        </div>
         <div className="join-content-cinematic">
           <motion.div
             initial="hidden"
@@ -1340,6 +1357,8 @@ function App() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="join-btn-cinematic"
+                onMouseEnter={() => setIsJoinHovered(true)}
+                onMouseLeave={() => setIsJoinHovered(false)}
               >
                 JOIN THE HAUS ↗
               </a>
