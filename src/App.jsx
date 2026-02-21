@@ -1022,7 +1022,7 @@ function App() {
   // Founders Carousel Data & State
   const [founderIndex, setFounderIndex] = useState(0)
   const allFounders = [
-    { id: "founder1", src: "/founder_anim_1.png" },
+    { id: "founder1", src: "/founder_anim_1.png", note: "CHIEF BRAND & CREATIVE CONTENT STRATEGIST" },
     { id: "founder2", src: "/founder_anim_2.png" },
     { id: "founder3", src: "/founder_anim_3.png", note: "A WEB3 BUILDER SHIPPING ONCHAIN PRODUCT" },
     { id: "founder4", src: "/founder_anim_4.png" },
