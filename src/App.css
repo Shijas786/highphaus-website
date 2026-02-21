@@ -1167,6 +1167,16 @@ body {
     height: 90px;
   }
 
+  .founder-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .founder-overlay span {
+    font-size: 0.6rem;
+    line-height: 1.2;
+  }
+
   .founders-horizontal-row {
     padding-left: 50%;
     /* Center the first item initially or just simple padding */

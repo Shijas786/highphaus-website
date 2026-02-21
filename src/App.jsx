@@ -1174,7 +1174,14 @@ function App() {
                           {f.isPlaceholder ? (
                             <div className="placeholder-content">???</div>
                           ) : (
-                            <img src={f.src} alt="" />
+                            <>
+                              <img src={f.src} alt="" />
+                              {f.note && (
+                                <div className="founder-overlay">
+                                  <span>{f.note}</span>
+                                </div>
+                              )}
+                            </>
                           )}
                         </motion.div>
                       ))}
