@@ -1316,7 +1316,7 @@ function App() {
                 visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
               }}
             >
-              THE DOORS ARE <span className="join-accent-cinematic">open.</span>
+              The doors are open.
             </motion.h2>
 
             <motion.p
@@ -1348,26 +1348,7 @@ function App() {
         </div>
 
         <div className="footer-section">
-          <div className="footer-left">
-            <h2>Stay updated.</h2>
-            <p>Get notified about special events, opportunities and announcements.</p>
-          </div>
-          <div className="footer-right">
-            <div className="footer-col">
-              <h4>Navigation</h4>
-              <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About Us</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h4>Documentation</h4>
-              <ul>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Conduct</a></li>
-              </ul>
-            </div>
-          </div>
+          {/* Bare footer */}
         </div>
       </section>
 
