@@ -1887,21 +1887,33 @@ body {
 }
 
 .join-title {
-  font-family: 'Anton', sans-serif;
-  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-family: var(--font-heading);
+  /* DM Serif Display */
+  font-size: clamp(2rem, 5vw, 3.5rem);
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.02em;
   color: #fff;
 }
 
+.join-accent {
+  font-family: 'Zeyada', cursive;
+  text-transform: lowercase;
+  color: #ffd700;
+  font-size: 1.2em;
+  margin-left: 0.1em;
+  display: inline-block;
+  transform: rotate(-5deg);
+}
+
 .join-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 3.5rem;
-  max-width: 600px;
+  font-family: var(--font-main);
+  /* Inter */
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2.5rem;
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
@@ -1909,25 +1921,25 @@ body {
 
 .join-btn {
   display: inline-block;
-  padding: 1.25rem 3.5rem;
-  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
-  color: #000;
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
-  font-size: 1rem;
+  padding: 0.8rem 2.5rem;
+  background: transparent;
+  color: #ffd700;
+  border: 1px solid #ffd700;
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   border-radius: 4px;
   text-decoration: none;
-  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
 }
 
 .join-btn:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 10px 40px rgba(255, 215, 0, 0.5);
-  background: white;
-  color: black;
+  transform: translateY(-2px);
+  background: #ffd700;
+  color: #000;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
 }
 
 @media (max-width: 768px) {

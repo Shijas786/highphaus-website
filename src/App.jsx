@@ -1289,7 +1289,7 @@ function App() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="join-title">READY TO BUILD THE FUTURE?</h2>
+            <h2 className="join-title">THE DOORS ARE <span className="join-accent">OPEN.</span></h2>
             <p className="join-subtitle">Join the founders lab and work alongside the world's best talents.</p>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSc1KtAXFQGX-yP_pQnV233r1T-awidpjVGefWdE6Ciqg4Ocsw/viewform"
