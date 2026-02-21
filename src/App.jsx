@@ -1348,7 +1348,14 @@ function App() {
         </div>
 
         <div className="footer-section">
-          {/* Bare footer */}
+          <a
+            href="https://www.instagram.com/highphaus.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-insta-link"
+          >
+            Instagram ↗
+          </a>
         </div>
       </section>
 
