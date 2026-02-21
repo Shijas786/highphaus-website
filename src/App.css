@@ -1859,15 +1859,11 @@ body {
   transition-delay: 0.3s;
 }
 
-/* --- Join Section --- */
 .join-section {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background-image: url('/faq_bg_money.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: #000;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1875,14 +1871,42 @@ body {
   z-index: 40;
 }
 
-.join-bg-overlay-cinematic {
+.join-bg-wrapper {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.85) 100%);
   z-index: 1;
+}
+
+.join-bg-money {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+  filter: brightness(0.6) grayscale(20%);
+  animation: breathingBg 20s ease-in-out infinite alternate;
+}
+
+@keyframes breathingBg {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.1);
+  }
+}
+
+.join-bg-spotlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.9) 100%);
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -1899,45 +1923,68 @@ body {
 }
 
 .join-title-cinematic {
-  font-family: var(--font-main);
-  font-size: clamp(2rem, 7vw, 3.8rem);
-  font-weight: 700;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.5rem, 8vw, 4.8rem);
+  font-weight: 400;
   color: #fff9f0;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   margin-bottom: 2rem;
-  text-shadow: 0 0 50px rgba(251, 191, 36, 0.2), 0 0 20px rgba(251, 191, 36, 0.1);
+  text-shadow: 0 0 60px rgba(251, 191, 36, 0.25);
 }
 
 .join-subtitle-cinematic {
   font-family: var(--font-main);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  color: rgba(255, 255, 255, 0.45);
-  max-width: 500px;
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 550px;
   margin: 0 auto 4rem;
   line-height: 1.6;
   font-weight: 400;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.05em;
+  text-transform: none;
 }
 
 .join-btn-cinematic {
   display: inline-block;
   padding: 0.5rem 0;
-  color: #fff9f0;
+  color: #fff;
   font-family: var(--font-main);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.2, 0.65, 0.3, 0.9);
   position: relative;
+  opacity: 0.9;
+}
+
+.join-btn-cinematic::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0.3);
+  transform-origin: center;
+  transition: transform 0.4s ease;
+  opacity: 0.5;
 }
 
 .join-btn-cinematic:hover {
+  opacity: 1;
   color: #ffd700;
-  transform: translateX(5px);
-  text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.join-btn-cinematic:hover::after {
+  transform: scaleX(1);
+  background: #ffd700;
+  opacity: 1;
 }
 
 /* --- New Footer --- */
