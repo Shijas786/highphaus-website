@@ -9,7 +9,7 @@ const WORKS = [
     title: 'NutriBrunch',
     category: 'Growth Systems + Strategy',
     year: '2025',
-    
+    result: 'High-Performance System',
     image: '/images/Nutribrunch.jpeg',
   },
   {
@@ -17,7 +17,7 @@ const WORKS = [
     title: 'Parinaya',
     category: 'Growth Systems + Strategy',
     year: '2026',
-    
+    result: 'Market Architecture',
     image: '/images/Parinaya.jpeg',
   },
 
