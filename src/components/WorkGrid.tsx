@@ -49,23 +49,25 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
   }
 
   return (
-    <motion.a 
-      href={'link' in project && (project as any).link ? (project as any).link : '#contact'}
-      target={'link' in project && (project as any).link ? '_blank' : undefined}
-      rel={ 'link' in project ? 'noopener noreferrer' : undefined }
+    <div 
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] as any, delay: index * 0.1 }}
       className={`group relative flex flex-col overflow-hidden bg-hp-black rounded-[2rem] lg:rounded-[3rem] mb-6 lg:mb-12 border border-hp-maroon/10 tech-grid cursor-pointer will-change-transform ${
         project.size === 'large' 
           ? 'h-[450px] md:h-[800px] lg:col-span-2' 
           : 'h-[400px] md:h-[600px] lg:col-span-1'
       }`}
     >
+      {/* THE TOTAL CAPTURE LINK (Absolute top layer) */}
+      <a 
+        href={(project as any).link || '#contact'} 
+        target={(project as any).link ? '_blank' : undefined}
+        rel="noopener noreferrer"
+        className="absolute inset-0 z-[100] w-full h-full cursor-pointer"
+        aria-label={`View ${project.name} on Instagram`}
+      />
+
       {/* Image Reveal */}
       <motion.div 
         initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" }}
@@ -83,6 +85,10 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
         />
       </motion.div>
       
+      {/* Metadata & Overlays (Visual Only) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-hp-maroon/20 via-hp-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-hp-black/20 via-hp-black/10 to-transparent pointer-events-none" />
+
       {/* Technical Spec Mouse Follower */}
       {isHovered && (
         <motion.div
@@ -102,41 +108,33 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
         </motion.div>
       )}
 
-      {/* Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-hp-maroon/20 via-hp-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-      <div className="absolute inset-0 bg-gradient-to-t from-hp-black/20 via-hp-black/10 to-transparent" />
-
-      {/* Metadata */}
-      <div className="absolute top-6 left-6 right-6 lg:top-10 lg:left-10 lg:right-10 flex justify-between items-start z-10 font-mono text-hp-white">
+      {/* Header UI (Static visual) */}
+      <div className="absolute top-6 left-6 right-6 lg:top-10 lg:left-10 lg:right-10 flex justify-between items-start z-10 font-mono text-hp-white pointer-events-none">
          <div className="px-3 py-1.5 lg:px-4 lg:py-2 border border-hp-maroon/20 rounded-full bg-hp-black/40 backdrop-blur-md">
             <span className="text-[9px] lg:text-[10px] font-black tracking-widest uppercase group-hover:text-hp-maroon transition-colors">
               {project.tag} // {project.id}
             </span>
          </div>
-         <Magnetic>
-            <div className="w-12 h-12 lg:w-14 lg:h-14 border border-hp-maroon/20 rounded-full flex items-center justify-center bg-hp-black/10 backdrop-blur-md group-hover:bg-hp-maroon group-hover:text-hp-white group-hover:border-hp-maroon transition-all duration-700 shadow-[0_0_15px_rgba(74, 15, 28, 0.2)]">
-               <ArrowUpRight className="w-5 h-5 lg:w-6 lg:h-6 group-hover:rotate-45 transition-transform" />
-            </div>
-         </Magnetic>
+         <div className="w-12 h-12 lg:w-14 lg:h-14 border border-hp-maroon/20 rounded-full flex items-center justify-center bg-hp-black/10 backdrop-blur-md group-hover:bg-hp-maroon group-hover:text-hp-white group-hover:border-hp-maroon transition-all duration-700 shadow-[0_0_15px_rgba(74, 15, 28, 0.2)]">
+            <ArrowUpRight className="w-5 h-5 lg:w-6 lg:h-6 group-hover:rotate-45 transition-transform" />
+         </div>
       </div>
 
-      {/* Content */}
-      <div className="absolute bottom-8 left-6 right-6 lg:bottom-10 lg:left-10 lg:right-10 z-10">
+      {/* Content UI (Static visual) */}
+      <div className="absolute bottom-8 left-6 right-6 lg:bottom-10 lg:left-10 lg:right-10 z-10 pointer-events-none">
          <div className="flex items-center gap-4 mb-3 lg:mb-4">
             <div className="h-[2px] w-6 bg-hp-maroon group-hover:w-16 transition-all duration-700" />
             <p className="text-[9px] lg:text-[10px] font-black tracking-[0.5em] text-hp-beige group-hover:text-hp-white uppercase font-mono transition-colors">{project.category}</p>
          </div>
-         <Magnetic>
-            <h3 className="text-fluid-md lg:text-5xl font-black tracking-tighter text-hp-white leading-none uppercase mb-4 lg:mb-6 drop-shadow-2xl transition-all duration-700">
-               {project.name}
-            </h3>
-         </Magnetic>
+         <h3 className="text-fluid-md lg:text-5xl font-black tracking-tighter text-hp-white leading-none uppercase mb-4 lg:mb-6 drop-shadow-2xl transition-all duration-700">
+            {project.name}
+         </h3>
          <div className="flex items-center gap-4">
             <div className="h-[1px] w-8 lg:w-12 bg-hp-maroon" />
             <p className="text-lg lg:text-xl font-bold tracking-tight text-hp-white font-mono">{project.metric}</p>
          </div>
       </div>
-    </motion.a>
+    </div>
   )
 }
 
