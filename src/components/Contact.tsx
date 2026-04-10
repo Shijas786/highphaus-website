@@ -159,10 +159,10 @@ export default function Contact() {
                     aria-label="Select your project budget range"
                   >
                     <option value="" disabled>Select a range</option>
-                    <option value="10-25k">$10k – $25k</option>
-                    <option value="25-50k">$25k – $50k</option>
-                    <option value="50-100k">$50k – $100k</option>
-                    <option value="100k+">$100k+</option>
+                    <option value="10-25k">₹10k – ₹25k</option>
+                    <option value="25-50k">₹25k – ₹50k</option>
+                    <option value="50-100k">₹50k – ₹100k</option>
+                    <option value="100k+">₹100k+</option>
                   </select>
                 </div>
 
