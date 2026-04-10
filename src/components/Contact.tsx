@@ -62,7 +62,7 @@ export default function Contact() {
             />
 
             <p className="body-lg max-w-sm text-hp-beige font-medium mb-12 leading-relaxed">
-              We work with ambitious brands and founders. Tell us about your vision — we will craft a strategy to match it.
+              We work with ambitious brands and founders. Tell us about your vision . We will craft a strategy to match it.
             </p>
 
             <div className="space-y-6 pt-4">
@@ -155,7 +155,8 @@ export default function Contact() {
                     name="budget"
                     value={form.budget}
                     onChange={e => setForm({ ...form, budget: e.target.value })}
-                    className={`${fieldClass} cursor-none bg-hp-black`}
+                    className={`${fieldClass} cursor-pointer bg-hp-black`}
+                    aria-label="Select your project budget range"
                   >
                     <option value="" disabled>Select a range</option>
                     <option value="10-25k">$10k – $25k</option>
@@ -163,6 +164,16 @@ export default function Contact() {
                     <option value="50-100k">$50k – $100k</option>
                     <option value="100k+">$100k+</option>
                   </select>
+                </div>
+
+                {/* Honeypot field for basic bot protection */}
+                <div className="hidden" aria-hidden="true">
+                  <input
+                    type="text"
+                    name="website_url"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
                 </div>
 
                 {error && (

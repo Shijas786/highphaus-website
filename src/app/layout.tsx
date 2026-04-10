@@ -16,8 +16,25 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://highphaus.agency'),
   title: "HIGHPHAUS | Global Digital Products & Experiences",
   description: "A typography-driven digital agency designing brands that lead globally. Built for performance and precision.",
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: "HIGHPHAUS | Global Digital Products & Experiences",
+    description: "A typography-driven digital agency designing brands that lead globally.",
+    url: 'https://highphaus.agency',
+    siteName: 'HIGHPHAUS',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "HIGHPHAUS | Global Digital Products & Experiences",
+    description: "Designing brands that lead globally.",
+  },
   icons: {
     icon: [
       { url: '/icon.png', type: 'image/png' },

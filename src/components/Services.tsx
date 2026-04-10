@@ -40,8 +40,8 @@ export default function Services() {
   const [expandedMobile, setExpandedMobile] = useState<number | null>(0)
 
   return (
-    <section className="section !pt-10 lg:!pt-16 bg-hp-black relative overflow-hidden" id="services">
-      <div className="container mb-40 lg:mb-64">
+    <section className="section !py-32 lg:!py-64 bg-hp-black relative overflow-hidden" id="services">
+      <div className="container lg:mb-80" style={{ marginBottom: '128px' }}>
         <div className="max-w-4xl">
           <p className="eyebrow !text-hp-beige/40 mb-4 tracking-[0.4em]">Our Expertise</p>
           <h2 className="display-2 text-hp-white uppercase font-bold leading-none mb-8">Our Services</h2>
@@ -52,7 +52,7 @@ export default function Services() {
       </div>
 
       <div className="container">
-        <div className="space-y-40 lg:space-y-72">
+        <div className="flex flex-col">
           {SERVICES.map((service, index) => (
             <motion.div
               key={service.id}
@@ -60,7 +60,11 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+              className="grid grid-cols-1 lg:grid-cols-2 lg:gap-32 items-center lg:mb-96"
+              style={{ 
+                gap: '16px',
+                marginBottom: index === SERVICES.length - 1 ? '0' : '160px'
+              }}
             >
               {/* IMAGE SIDE */}
               <div className={`relative h-[24rem] md:h-[30rem] lg:h-[38rem] overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-hp-maroon/20 group order-1 ${

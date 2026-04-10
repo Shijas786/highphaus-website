@@ -7,8 +7,28 @@ import Image from 'next/image'
 import Magnetic from './Magnetic'
 
 const PROJECTS = [
-  { id: '01', name: "Aether Protocol", category: "Web3 Engineering", metric: "+300% Scaling", tag: "FINTECH", size: "large", img: "/images/project-1.png", tech: "CORE // SOLIDITY // NODE.JS" },
-  { id: '02', name: "Vanguard Global", category: "Enterprise Commerce", metric: "Awwwards-Tier", tag: "RETAIL", size: "small", img: "/images/project-2.png", tech: "REACT // NEXT // TW v4" },
+  { 
+    id: '01', 
+    name: "NutriBrunch", 
+    category: "Wellness & Nutrition", 
+    metric: "Growth Engine", 
+    tag: "WELLNESS", 
+    size: "large", 
+    img: "/images/nutribrunch.png", 
+    tech: "STRATEGY // BRANDING // ADS",
+    link: "https://www.instagram.com/nutribrunch.in?igsh=MTBnd2F5dW9qNnloOQ=="
+  },
+  { 
+    id: '02', 
+    name: "Parinaya Boutique", 
+    category: "Luxury Fashion", 
+    metric: "Brand Authority", 
+    tag: "FASHION", 
+    size: "small", 
+    img: "/images/parinaya.png", 
+    tech: "UI/UX // CATALOG // SOCIAL",
+    link: "https://www.instagram.com/parinayaboutique?igsh=MTRzY2xua3poNmg1"
+  },
   { id: '03', name: "Nebula Systems", category: "Core Strategy", metric: "5M+ Users", tag: "SAAS", size: "small", img: "/images/project-3.png", tech: "GO // RUST // CLOUD" },
   { id: '04', name: "Prism Alpha", category: "Service Exp", metric: "Global Depth", tag: "INFRA", size: "large", img: "/images/project-4.png", tech: "UI/UX // CD // OPS" }
 ]
@@ -37,24 +57,32 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] as any, delay: index * 0.1 }}
-      className={`group relative flex flex-col overflow-hidden bg-hp-black rounded-[2rem] lg:rounded-[3rem] mb-6 lg:mb-12 border border-hp-maroon/10 tech-grid ${
+      className={`group relative flex flex-col overflow-hidden bg-hp-black rounded-[2rem] lg:rounded-[3rem] mb-6 lg:mb-12 border border-hp-maroon/10 tech-grid cursor-pointer will-change-transform ${
         project.size === 'large' 
           ? 'h-[450px] md:h-[800px] lg:col-span-2' 
           : 'h-[400px] md:h-[600px] lg:col-span-1'
       }`}
+      onClick={() => {
+        if ('link' in project && (project as any).link) {
+          window.open((project as any).link, '_blank')
+        } else {
+          window.location.href = '#contact'
+        }
+      }}
     >
       {/* Image Reveal */}
       <motion.div 
         initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" }}
         whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
         viewport={{ once: true }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] as any, delay: 0.2 }}
-        className="absolute inset-0 w-full h-full"
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as any, delay: 0.1 }}
+        className="absolute inset-0 w-full h-full will-change-[clip-path]"
       >
         <Image 
           src={project.img} 
-          alt={project.name}
+          alt={`Project showcase: ${project.name} - ${project.category} result`}
           fill
+          priority={index < 2}
           className="object-cover opacity-100 group-hover:scale-105 transition-transform duration-[2.5s] ease-[cubic-bezier(0.16,1,0.3,1)] contrast-125"
         />
       </motion.div>

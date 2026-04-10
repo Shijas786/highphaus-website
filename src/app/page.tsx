@@ -54,7 +54,7 @@ function Vision() {
   )
 }
 
-// REFRESH_HASH: 1775642400
+// REFRESH_HASH: 1775642401
 export default function Home() {
   const [loaded, setLoaded] = useState(false)
   
