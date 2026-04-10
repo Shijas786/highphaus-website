@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Prerequisites
+
+- **Node.js 20.x**: This project requires Node.js version 20.
+  - If you use `nvm`, run: `nvm install 20 && nvm use 20`
+  - A `.nvmrc` file is included for automatic version switching.
+
 ## Getting Started
 
 First, run the development server:
