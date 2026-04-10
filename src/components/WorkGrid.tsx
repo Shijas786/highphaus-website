@@ -49,7 +49,10 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
   }
 
   return (
-    <motion.div 
+    <motion.a 
+      href={'link' in project && (project as any).link ? (project as any).link : '#contact'}
+      target={'link' in project && (project as any).link ? '_blank' : undefined}
+      rel={ 'link' in project ? 'noopener noreferrer' : undefined }
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -62,13 +65,6 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
           ? 'h-[450px] md:h-[800px] lg:col-span-2' 
           : 'h-[400px] md:h-[600px] lg:col-span-1'
       }`}
-      onClick={() => {
-        if ('link' in project && (project as any).link) {
-          window.open((project as any).link, '_blank')
-        } else {
-          window.location.href = '#contact'
-        }
-      }}
     >
       {/* Image Reveal */}
       <motion.div 
@@ -140,7 +136,7 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
             <p className="text-lg lg:text-xl font-bold tracking-tight text-hp-white font-mono">{project.metric}</p>
          </div>
       </div>
-    </motion.div>
+    </motion.a>
   )
 }
 
