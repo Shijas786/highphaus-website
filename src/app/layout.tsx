@@ -24,6 +24,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: "HIGHPHAUS ",
     description: "A typography-driven digital agency designing brands that lead globally.",
@@ -40,8 +51,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico', type: 'image/x-icon' },
     ],
     apple: '/icon.png',
+    shortcut: '/icon.png',
   },
 };
 
