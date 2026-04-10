@@ -155,14 +155,14 @@ export default function Contact() {
                     name="budget"
                     value={form.budget}
                     onChange={e => setForm({ ...form, budget: e.target.value })}
-                    className={`${fieldClass} cursor-pointer bg-hp-black`}
+                    className={`${fieldClass} cursor-pointer bg-hp-black border-hp-maroon/40 focus:border-hp-maroon ring-inset transition-all`}
                     aria-label="Select your project budget range"
                   >
-                    <option value="" disabled>Select a range</option>
-                    <option value="10-25k">₹10k – ₹25k</option>
-                    <option value="25-50k">₹25k – ₹50k</option>
-                    <option value="50-100k">₹50k – ₹100k</option>
-                    <option value="100k+">₹100k+</option>
+                    <option value="" disabled className="bg-hp-black text-hp-beige/40">Select a range</option>
+                    <option value="10-25k" className="bg-hp-black text-hp-white">₹10k – ₹25k</option>
+                    <option value="25-50k" className="bg-hp-black text-hp-white">₹25k – ₹50k</option>
+                    <option value="50-100k" className="bg-hp-black text-hp-white">₹50k – ₹100k</option>
+                    <option value="100k+" className="bg-hp-black text-hp-white">₹100k+</option>
                   </select>
                 </div>
 
