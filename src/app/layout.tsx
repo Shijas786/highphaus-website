@@ -7,6 +7,8 @@ import HUD from "@/components/HUD";
 import Cursor from "@/components/Cursor";
 import ArchitecturalGrid from "@/components/ArchitecturalGrid";
 import Script from "next/script";
+import TopLoader from "@/components/TopLoader";
+import { Suspense } from 'react';
 
 // Unified Single Font Strategy (Premium Sans-Serif)
 const outfit = Outfit({
@@ -17,13 +19,13 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://highphaus.agency'),
-  title: "HIGHPHAUS | Global Digital Products & Experiences",
+  title: "HIGHPHAUS ",
   description: "A typography-driven digital agency designing brands that lead globally. Built for performance and precision.",
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "HIGHPHAUS | Global Digital Products & Experiences",
+    title: "HIGHPHAUS ",
     description: "A typography-driven digital agency designing brands that lead globally.",
     url: 'https://highphaus.agency',
     siteName: 'HIGHPHAUS',
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "HIGHPHAUS | Global Digital Products & Experiences",
+    title: "HIGHPHAUS ",
     description: "Designing brands that lead globally.",
   },
   icons: {
@@ -72,8 +74,10 @@ export default function RootLayout({
           }}
         />
         <HUDProvider>
+          <Suspense fallback={null}>
+            <TopLoader />
+          </Suspense>
           <ArchitecturalGrid />
-          <HUD />
           <HUD />
           <div className="relative w-full max-w-[100vw] overflow-x-clip">
             <SmoothScroll>
