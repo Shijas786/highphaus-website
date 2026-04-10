@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTe
 import Magnetic from './Magnetic'
 import DecodedText from './DecodedText'
 import Starfield from './Starfield'
+import Image from 'next/image'
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null)
@@ -160,8 +161,14 @@ export default function Hero() {
         style={{ y, scale: heroScale, clipPath: facadeClip }}
         className="absolute inset-0 flex items-center justify-center bg-hp-black will-change-[clip-path]"
       >
-        <div 
-          className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center transition-all duration-700 opacity-60 lg:opacity-80" 
+        <Image 
+          src="/images/hero-bg.png" 
+          alt="Architectural facade background"
+          fill
+          priority
+          quality={80}
+          sizes="100vw"
+          className="object-cover opacity-60 lg:opacity-80 transition-all duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-hp-black/60 to-hp-black" />
         <HeroContent variant="solid" />

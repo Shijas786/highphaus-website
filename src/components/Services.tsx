@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Magnetic from './Magnetic'
+import Image from 'next/image'
 
 const SERVICES = [
   {
@@ -73,9 +74,17 @@ export default function Services() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-60 group-hover:opacity-100"
-                  style={{ backgroundImage: `url(${service.image})` }}
-                />
+                  className="absolute inset-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-100"
+                >
+                  <Image 
+                    src={service.image}
+                    alt={`${service.title} service visualization`}
+                    fill
+                    quality={75}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                    className="object-cover"
+                  />
+                </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-hp-black via-transparent to-transparent opacity-60" />
                 
                 {/* ID DECOR */}

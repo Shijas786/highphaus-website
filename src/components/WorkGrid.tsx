@@ -81,6 +81,8 @@ const ProjectCard = ({ project, index }: { project: typeof PROJECTS[0], index: n
           alt={`Project showcase: ${project.name} - ${project.category} result`}
           fill
           priority={index < 2}
+          quality={80}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover opacity-100 group-hover:scale-105 transition-transform duration-[2.5s] ease-[cubic-bezier(0.16,1,0.3,1)] contrast-125"
         />
       </motion.div>
