@@ -38,6 +38,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Hardware Acceleration Global */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 @media (pointer: fine) {

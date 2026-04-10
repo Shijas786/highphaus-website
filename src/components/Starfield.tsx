@@ -98,10 +98,8 @@ export default function Starfield() {
         star.opacity += (Math.random() - 0.5) * star.twinkle
         star.opacity = Math.max(0.1, Math.min(0.8, star.opacity))
 
-        ctx.beginPath()
-        ctx.arc(star.x + offX, star.y + offY, star.size, 0, Math.PI * 2)
         ctx.fillStyle = star.color + `${star.opacity})`
-        ctx.fill()
+        ctx.fillRect(star.x + offX, star.y + offY, star.size, star.size)
       })
 
       // Shooting Stars Animation
