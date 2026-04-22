@@ -273,13 +273,19 @@ a:hover .link-hover::after { width: 100%; }
 /* ─── UTILITIES ─── */
 .glass {
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glass-dark {
-  background: rgba(5, 5, 5, 0.7);
-  backdrop-filter: blur(12px);
+  background: rgba(5, 5, 5, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 15, 28, 0.1);
+}
+
+.glass-maroon {
+  background: rgba(74, 15, 28, 0.05);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(74, 15, 28, 0.2);
 }
 
@@ -315,4 +321,22 @@ a:hover .link-hover::after { width: 100%; }
     transparent 100%
   );
   background-size: 100% 4px;
+}
+
+@keyframes mesh-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.mesh-gradient {
+  background: linear-gradient(-45deg, #050505, #0a0505, #1a0508, #050505);
+  background-size: 400% 400%;
+  animation: mesh-move 15s ease infinite;
+}
+
+.text-gradient {
+  background: linear-gradient(to bottom right, #fff 30%, rgba(255,255,255,0.4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

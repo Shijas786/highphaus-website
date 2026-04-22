@@ -1,31 +1,18 @@
 'use server'
 
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 export async function sendEmail(formData: FormData) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
+  // Use highphaus@gmail.com as the default recipient
+  const targetEmail = process.env.CONTACT_RECEIVER_EMAIL || 'highphaus@gmail.com';
 
-  // Safe Diagnostic: Check if API key exists and log its prefix
-  if (apiKey && apiKey !== 're_123456789') {
-    console.log(`[DIAGNOSTIC] RESEND_API_KEY detected: ${apiKey.substring(0, 7)}...`);
-  } else {
-    console.warn('[DIAGNOSTIC] RESEND_API_KEY is missing or the placeholder is still in use.');
+  if (!emailUser || !emailPass) {
+    console.warn('[NODEMAILER] Missing EMAIL_USER or EMAIL_PASS in environment variables.');
+    return { error: 'Email service is not configured. Please contact highphaus@gmail.com directly.' };
   }
 
-  if (!apiKey || apiKey === 're_123456789') {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[MOCK_MODE] Simulating successful email dispatch for testing.');
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return { 
-        success: true, 
-        id: 'mock_id_for_dev',
-        message: 'Developer Notice: This is a SIMULATED success for testing the UI. No real email was sent because your RESEND_API_KEY is missing in .env.local.'
-      };
-    }
-    return { error: 'Inquiry service is currently in maintenance. Please contact highphaus@gmail.com directly.' };
-  }
-
-  const resend = new Resend(apiKey);
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const project = formData.get('project') as string;
@@ -35,17 +22,21 @@ export async function sendEmail(formData: FormData) {
     return { error: 'Missing required fields' };
   }
 
-  const fromAddress = 'Highphaus Contact Form <onboarding@resend.dev>';
-  const toAddress = ['highphaus@gmail.com'];
-
-  console.log(`[ATTEMPT] Sending email from ${fromAddress} to ${toAddress.join(', ')}`);
+  // Create transporter using Gmail SMTP
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: emailUser,
+      pass: emailPass,
+    },
+  });
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: fromAddress,
-      to: toAddress,
-      subject: `New Project Inquiry: ${name}`,
+    await transporter.sendMail({
+      from: `"${name}" <${emailUser}>`,
+      to: targetEmail,
       replyTo: email,
+      subject: `New Project Inquiry: ${name}`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px;">
           <h2 style="color: #4A0F1C; border-bottom: 2px solid #4A0F1C; padding-bottom: 10px;">New Project Inquiry</h2>
@@ -62,19 +53,10 @@ export async function sendEmail(formData: FormData) {
       `,
     });
 
-    if (error) {
-      console.error('[RESEND_ERROR]', error);
-      // Specific hint for unverified domain sandbox error
-      if (error.name === 'validation_error' || error.message.includes('verified')) {
-        return { error: 'Delivery Restricted: Your Resend account must verify the recipient domain or use its registered email.' };
-      }
-      return { error: error.message };
-    }
-
-    console.log('[SUCCESS] Email sent successfully:', data?.id);
-    return { success: true, id: data?.id };
+    console.log('[SUCCESS] Email sent successfully to', targetEmail);
+    return { success: true, message: 'Your message has been sent successfully. We will get back to you soon.' };
   } catch (err: any) {
-    console.error('[RUNTIME_ERROR] Integration failed:', err);
-    return { error: 'System integration error. Our engineers have been notified.' };
+    console.error('[RUNTIME_ERROR] Nodemailer failed:', err);
+    return { error: 'Failed to send email. Please ensure your Gmail App Password is correct.' };
   }
 }

@@ -15,17 +15,17 @@ export default function About() {
     {
       step: '01',
       title: 'Position',
-      desc: 'We define your brand positioning, messaging, and content direction.'
+      desc: 'We define your brand positioning, messaging, and content direction for market dominance.'
     },
     {
       step: '02',
       title: 'Build',
-      desc: 'We create high-performing content and marketing systems tailored for your audience.'
+      desc: 'We create high-performing content and marketing systems tailored for high-fidelity conversion.'
     },
     {
       step: '03',
       title: 'Scale',
-      desc: 'We run paid ads and optimize performance to generate consistent leads and revenue.'
+      desc: 'We run paid ads and SEO services to generate consistent leads and predictable revenue.'
     }
   ]
 
@@ -44,7 +44,7 @@ export default function About() {
 
             <div className="absolute inset-0 flex items-center justify-center">
               <img 
-                src="/images/highplogo-red.png" 
+                src="/images/highplogo-Beige.png" 
                 alt="Highphaus Logo" 
                 className="w-64 sm:w-80 lg:w-[28rem] opacity-90 select-none pointer-events-none transition-all duration-700 hover:scale-105"
               />

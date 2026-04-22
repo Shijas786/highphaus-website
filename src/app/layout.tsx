@@ -18,12 +18,20 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://highphaus.agency'),
-  title: "HIGHPHAUS ",
-  description: "A typography-driven digital agency designing brands that lead globally. Built for performance and precision.",
-  alternates: {
-    canonical: '/',
+  metadataBase: new URL("https://www.highphaus.com"),
+
+  title: {
+    default: "HighPhaus | Digital Marketing & Web Development Agency",
+    template: "%s | HighPhaus"
   },
+
+  description:
+    "HighPhaus is a high-performance digital agency specializing in SEO-driven web development, data-backed paid ads, and brand scaling systems.",
+
+  alternates: {
+    canonical: "https://www.highphaus.com",
+  },
+
   robots: {
     index: true,
     follow: true,
@@ -35,26 +43,38 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+
   openGraph: {
-    title: "HIGHPHAUS ",
-    description: "A typography-driven digital agency designing brands that lead globally.",
-    url: 'https://highphaus.agency',
-    siteName: 'HIGHPHAUS',
-    locale: 'en_US',
-    type: 'website',
+    title: "HighPhaus | Digital Agency for Scaling Founders",
+    description: "Build growth systems that convert. SEO, Paid Ads, Branding and High-performance Web Development.",
+    url: "https://www.highphaus.com",
+    siteName: "HighPhaus",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "HighPhaus Digital Agency - Build to Scale"
+      }
+    ],
+    locale: "en_US",
+    type: "website"
   },
+
   twitter: {
-    card: 'summary_large_image',
-    title: "HIGHPHAUS ",
-    description: "Designing brands that lead globally.",
+    card: "summary_large_image",
+    title: "HighPhaus Digital Agency",
+    description: "SEO, Paid Ads, Branding and High-performance Growth Systems.",
+    images: ["/og-image.png"],
+    creator: "@highphaus"
   },
+
   icons: {
     icon: [
-      { url: '/icon.png', type: 'image/png' },
-      { url: '/favicon.ico', type: 'image/x-icon' },
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: '/icon.png',
-    shortcut: '/icon.png',
+    apple: "/favicon.png",
   },
 };
 
@@ -65,6 +85,61 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`scroll-smooth ${outfit.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Advanced Schema Markup (JSON-LD) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "@id": "https://www.highphaus.com/#organization",
+                "name": "HighPhaus",
+                "url": "https://www.highphaus.com",
+                "logo": "https://www.highphaus.com/favicon.png",
+                "sameAs": [
+                  "https://x.com/highphaus",
+                  "https://www.instagram.com/highphaus",
+                  "https://www.linkedin.com/in/highphaus"
+                ]
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "@id": "https://www.highphaus.com/#localbusiness",
+                "name": "HighPhaus Digital Agency",
+                "image": "https://www.highphaus.com/og-image.png",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Kallara",
+                  "addressLocality": "Trivandrum",
+                  "addressRegion": "Kerala",
+                  "postalCode": "695608",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 8.7512,
+                  "longitude": 76.9412
+                },
+                "url": "https://www.highphaus.com",
+                "telephone": "+917034206108",
+                "priceRange": "$$"
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "Service",
+                "name": "Web Development & SEO",
+                "provider": { "@id": "https://www.highphaus.com/#organization" },
+                "description": "High-performance Next.js development and SEO strategies for scaling brands."
+              }
+            ]),
+          }}
+        />
+      </head>
       <body 
         className="antialiased bg-hp-black selection:bg-hp-white selection:text-hp-black font-sans text-hp-white relative overflow-x-hidden"
         style={{ fontFamily: 'var(--font-outfit), sans-serif' }}

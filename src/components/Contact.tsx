@@ -22,7 +22,7 @@ export default function Contact() {
       const result = await sendEmail(formData)
       if (result.success) {
         setSent(true)
-        setResultMessage(result.message || null)
+        setResultMessage(result.message || 'Message sent successfully')
       } else {
         setError(result.error || 'Failed to send message')
       }

@@ -9,30 +9,37 @@ const SERVICES = [
   {
     id: '01',
     title: 'Growth Systems',
-    description: 'End-to-end marketing system designed to attract, convert, and scale.',
+    description: 'End-to-end marketing systems designed to attract, convert, and scale your brand.',
     result: 'Revenue Infrastructure',
-    image: '/images/services/growth-systems.png'
+    image: '/images/services/growth-systems-hp.png'
   },
   {
     id: '02',
     title: 'Content Marketing',
-    description: 'Strategic content creation focused on engagement and brand growth.',
+    description: 'Strategic content creation focused on high-authority engagement and organic growth.',
     result: 'Attention Architecture',
-    image: '/images/services/content-marketing.png'
+    image: '/images/services/content-marketing-hp.png'
   },
   {
     id: '03',
     title: 'Paid Advertising',
-    description: 'Meta and Google ads optimized for leads and conversions.',
+    description: 'Multi-channel Meta and Google ads optimized for predictable leads and ROI.',
     result: 'Growth Precision',
     image: '/images/services/paid-advertising.png'
   },
   {
     id: '04',
     title: 'Brand Strategy',
-    description: 'Positioning, messaging, and identity to differentiate your brand.',
+    description: 'Positioning, messaging, and high-fidelity identity to differentiate your brand.',
     result: 'Identity Core',
-    image: '/images/services/brand-strategy.png'
+    image: '/images/services/brand-strategy-hp.png'
+  },
+  {
+    id: '05',
+    title: 'Web Development',
+    description: 'High-performance, architectural web applications built with modern frameworks for extreme speed and scalability.',
+    result: 'Digital Infrastructure',
+    image: '/images/services/web-dev-hp.png'
   }
 ]
 
@@ -74,7 +81,7 @@ export default function Services() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 transition-opacity duration-1000 opacity-60 group-hover:opacity-100"
+                  className="absolute inset-0 transition-opacity duration-1000 opacity-100"
                 >
                   <Image 
                     src={service.image}
@@ -85,7 +92,7 @@ export default function Services() {
                     className="object-cover"
                   />
                 </motion.div>
-                <div className="absolute inset-0 bg-gradient-to-t from-hp-black via-transparent to-transparent opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-hp-black via-transparent to-transparent opacity-30" />
                 
                 {/* ID DECOR */}
                 <div className="absolute top-4 left-4 md:top-8 md:left-8">

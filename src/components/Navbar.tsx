@@ -6,6 +6,7 @@ import { useHUD } from '@/context/HUDContext'
 const NAV_LINKS = [
   { label: 'Portfolio', href: '#portfolio' },
   { label: 'Services', href: '#services' },
+  { label: 'Blog', href: '/blog' },
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ]

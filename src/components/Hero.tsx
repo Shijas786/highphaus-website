@@ -59,76 +59,78 @@ export default function Hero() {
     }
   }, [mouseX])
 
-  const HeroContent = ({ variant }: { variant: 'solid' | 'outline' }) => (
-    <div className="container relative z-10 text-center flex flex-col items-center pointer-events-none">
-      {/* TOP LINE & EYEBROW (STUDIO PRECISION) */}
-      <div className="flex flex-col items-center mb-16 lg:mb-20">
-        <div className={`h-[2px] w-16 lg:w-24 mb-10 lg:mb-12 ${variant === 'solid' ? 'bg-hp-white shadow-[0_0_20px_#FFFFFF]' : 'bg-hp-maroon shadow-[0_0_20px_#4A0F1C]'}`} />
+  const HeroContent = ({ variant, isMain = false }: { variant: 'solid' | 'outline', isMain?: boolean }) => {
+    const HeadingTag = isMain ? 'h1' : 'div';
+    
+    return (
+      <div className="container relative z-10 text-center flex flex-col items-center pointer-events-none">
+        {/* TOP LINE & EYEBROW (STUDIO PRECISION) */}
+        <div className="flex flex-col items-center mb-16 lg:mb-20">
+          <div className={`h-[2px] w-16 lg:w-24 mb-10 lg:mb-12 ${variant === 'solid' ? 'bg-hp-white shadow-[0_0_20px_#FFFFFF]' : 'bg-hp-maroon shadow-[0_0_20px_#4A0F1C]'}`} />
 
-        <p className={`uppercase text-[10px] lg:text-[12px] tracking-[0.6em] lg:tracking-[0.8em] mb-6 ${variant === 'solid' ? 'text-hp-white font-medium' : 'text-hp-maroon'}`}>
-          <DecodedText text="FOR FOUNDERS. BUILDERS. BRANDS." delay={0.6} variant="white" />
+          <p className={`uppercase text-[10px] lg:text-[12px] tracking-[0.6em] lg:tracking-[0.8em] mb-6 ${variant === 'solid' ? 'text-hp-white font-medium' : 'text-hp-maroon'}`}>
+            <DecodedText text="FOR FOUNDERS. BUILDERS. BRANDS." delay={0.6} variant="white" />
+          </p>
+        </div>
+
+        {/* HEADLINE (GOLDEN RATIO CALIBRATION) */}
+        <HeadingTag
+          className={`uppercase mb-16 lg:mb-24 leading-[1.15] lg:leading-[1.15] tracking-[-0.02em] ${variant === 'solid' ? 'text-hp-white' : 'text-transparent'}`}
+          style={variant === 'outline'
+            ? { WebkitTextStroke: '1.2px rgba(255,255,255,0.5)' }
+            : {}
+          }
+        >
+          <span 
+            className={`block text-[clamp(2rem,10vw,6.5rem)] font-black ${
+              variant === 'solid' 
+                ? 'text-hp-maroon [text-shadow:0_0_15px_rgba(74,15,28,0.3)]' 
+                : 'text-transparent'
+            }`}
+            style={variant === 'outline' ? { WebkitTextStroke: '1.2px rgba(255,255,255,0.5)' } : {}}
+          >
+            WE BUILD GROWTH SYSTEMS
+          </span>
+        </HeadingTag>
+
+        {/* DESCRIPTION (EXPANSIVE CINEMATIC WRAP) */}
+        <p className={`max-w-2xl lg:max-w-3xl mx-auto mb-20 lg:mb-32 text-base lg:text-2xl leading-relaxed font-light tracking-wide ${variant === 'solid' ? 'text-hp-white/80' : 'text-white/40'}`}>
+          Content. Ads. Strategy. Built to scale your business.
+        </p>
+
+        {/* BUTTONS (WORLD-CLASS FOOTPRINT) */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 lg:gap-16 pointer-events-auto">
+          <Magnetic>
+            <a 
+              href="#portfolio"
+              className={`${variant === 'solid' 
+                ? 'btn-primary' 
+                : 'btn-outline !border-hp-maroon !text-hp-maroon hover:!bg-hp-white hover:!text-hp-black'
+              } !text-[11px] lg:!text-sm !px-10 !py-4 !tracking-[0.15em] !font-bold transition-all duration-300 uppercase w-full sm:w-auto`}
+            >
+              OUR PORTFOLIO →
+            </a>
+          </Magnetic>
+
+          <Magnetic>
+            <a 
+              href="#contact"
+              className={`${variant === 'solid'
+                ? 'btn-outline !border-hp-white !text-hp-white hover:!bg-hp-white hover:!text-hp-black'
+                : 'btn-outline !border-hp-maroon/60 !text-hp-maroon/80 hover:!bg-hp-white hover:!text-hp-black'
+              } !text-[11px] lg:!text-sm !px-10 !py-4 !tracking-[0.15em] !font-bold transition-all duration-300 uppercase w-full sm:w-auto`}
+            >
+              GET A FREE STRATEGY CALL →
+            </a>
+          </Magnetic>
+        </div>
+        
+        <p className={`mt-16 text-[11px] lg:text-[13px] tracking-wide font-light ${variant === 'solid' ? 'text-hp-white/40' : 'text-white/20'}`}>
+          Built for brands that want to scale, not just post.
         </p>
       </div>
-
-      {/* HEADLINE (GOLDEN RATIO CALIBRATION) */}
-      <h1
-        className={`uppercase mb-16 lg:mb-24 leading-[1.15] lg:leading-[1.15] tracking-[-0.02em] ${variant === 'solid' ? 'text-hp-white' : 'text-transparent'}`}
-        style={variant === 'outline'
-          ? { WebkitTextStroke: '1.2px rgba(255,255,255,0.5)' }
-          : {}
-        }
-      >
-        
-
-        <span 
-          className={`block text-[clamp(2rem,10vw,6.5rem)] font-black ${
-            variant === 'solid' 
-              ? 'text-hp-maroon [text-shadow:0_0_15px_rgba(74,15,28,0.3)]' 
-              : 'text-transparent'
-          }`}
-          style={variant === 'outline' ? { WebkitTextStroke: '1.2px rgba(255,255,255,0.5)' } : {}}
-        >
-          WE BUILD GROWTH SYSTEMS
-        </span>
-      </h1>
-
-      {/* DESCRIPTION (EXPANSIVE CINEMATIC WRAP) */}
-      <p className={`max-w-2xl lg:max-w-3xl mx-auto mb-20 lg:mb-32 text-base lg:text-2xl leading-relaxed font-light tracking-wide ${variant === 'solid' ? 'text-hp-white/80' : 'text-white/40'}`}>
-        Content. Ads. Strategy. Built to scale your business.
-      </p>
-
-      {/* BUTTONS (WORLD-CLASS FOOTPRINT) */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-8 lg:gap-16 pointer-events-auto">
-        <Magnetic>
-          <a 
-            href="#portfolio"
-            className={`${variant === 'solid' 
-              ? 'btn-primary' 
-              : 'btn-outline !border-hp-maroon !text-hp-maroon hover:!bg-hp-white hover:!text-hp-black'
-            } !text-[11px] lg:!text-sm !px-10 !py-4 !tracking-[0.15em] !font-bold transition-all duration-300 uppercase w-full sm:w-auto`}
-          >
-            OUR PORTFOLIO →
-          </a>
-        </Magnetic>
-
-        <Magnetic>
-          <a 
-            href="#contact"
-            className={`${variant === 'solid'
-              ? 'btn-outline !border-hp-white !text-hp-white hover:!bg-hp-white hover:!text-hp-black'
-              : 'btn-outline !border-hp-maroon/60 !text-hp-maroon/80 hover:!bg-hp-white hover:!text-hp-black'
-            } !text-[11px] lg:!text-sm !px-10 !py-4 !tracking-[0.15em] !font-bold transition-all duration-300 uppercase w-full sm:w-auto`}
-          >
-            GET A FREE STRATEGY CALL →
-          </a>
-        </Magnetic>
-      </div>
-      
-      <p className={`mt-16 text-[11px] lg:text-[13px] tracking-wide font-light ${variant === 'solid' ? 'text-hp-white/40' : 'text-white/20'}`}>
-        Built for brands that want to scale, not just post.
-      </p>
-    </div>
-  )
+    )
+  }
 
   return (
     <section ref={ref} className="relative h-screen flex items-center justify-center overflow-hidden bg-transparent touch-pan-y">
@@ -139,7 +141,7 @@ export default function Hero() {
       >
         {/* Architectural Grid Background */}
         <div 
-          className="absolute inset-0 opacity-[0.08]" 
+          className="absolute inset-0 opacity-[0.15]" 
           style={{ 
             backgroundImage: `
               linear-gradient(to right, rgba(255,255,255,0.5) 1px, transparent 1px),
@@ -168,10 +170,10 @@ export default function Hero() {
           priority
           quality={80}
           sizes="100vw"
-          className="object-cover opacity-60 lg:opacity-80 transition-all duration-700"
+          className="object-cover opacity-80 lg:opacity-100 transition-all duration-700"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-hp-black/60 to-hp-black" />
-        <HeroContent variant="solid" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-hp-black/30 to-hp-black/80" />
+        <HeroContent variant="solid" isMain={true} />
       </motion.div>
 
       {/* CENTER DIVIDER */}
