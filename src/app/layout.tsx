@@ -145,22 +145,7 @@ export default function RootLayout({
         style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
         suppressHydrationWarning
       >
-        <Script
-          id="meta-mask-fix"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('unhandledrejection', (event) => {
-                if (event.reason && 
-                   (event.reason.includes?.('MetaMask') || 
-                    event.reason.message?.includes?.('MetaMask') ||
-                    event.reason.toString?.().includes('MetaMask'))) {
-                  event.preventDefault();
-                }
-              });
-            `,
-          }}
-        />
+
         <HUDProvider>
           <Suspense fallback={null}>
             <TopLoader />
@@ -168,6 +153,7 @@ export default function RootLayout({
           <ArchitecturalGrid />
           <HUD />
           <div className="relative w-full max-w-[100vw] overflow-x-clip">
+            <Cursor />
             <SmoothScroll>
               {children}
             </SmoothScroll>

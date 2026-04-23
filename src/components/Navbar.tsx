@@ -1,17 +1,19 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Magnetic from './Magnetic'
 import { useHUD } from '@/context/HUDContext'
 
 const NAV_LINKS = [
-  { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Services', href: '#services' },
+  { label: 'Portfolio', href: '/#portfolio' },
+  { label: 'Services', href: '/#services' },
   { label: 'Blog', href: '/blog' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About', href: '/#about' },
+  { label: 'Contact', href: '/#contact' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ theme = 'dark' }: { theme?: 'dark' | 'light' }) {
   const { hudActive, toggleHUD } = useHUD()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -22,6 +24,8 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const isLight = theme === 'light'
+
   return (
     <>
       <motion.header
@@ -29,13 +33,17 @@ export default function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
         className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-700 ${
-          scrolled ? 'bg-hp-black/90 backdrop-blur-md border-b border-hp-maroon' : ''
+          scrolled 
+            ? isLight ? 'bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm' : 'bg-hp-black/90 backdrop-blur-md border-b border-hp-maroon'
+            : ''
         }`}
       >
         <div className="container flex items-center justify-between py-4 lg:py-6">
           {/* Logo */}
           <Magnetic>
-            <a href="#" className="eyebrow text-hp-white tracking-[0.25em] lg:tracking-[0.3em] hover:text-hp-maroon transition-colors duration-300 p-2 text-[10px] lg:text-[11px]">
+            <a href="/" className={`eyebrow tracking-[0.25em] lg:tracking-[0.3em] transition-colors duration-300 p-2 text-[10px] lg:text-[11px] ${
+              isLight ? 'text-black hover:text-hp-maroon' : 'text-hp-white hover:text-hp-maroon'
+            }`}>
               HIGHPHAUS
             </a>
           </Magnetic>
@@ -46,9 +54,11 @@ export default function Navbar() {
               <Magnetic key={link.label}>
                 <a
                   href={link.href}
-                  className="eyebrow text-hp-white transition-opacity duration-300 p-4 block"
+                  className={`eyebrow transition-opacity duration-300 p-4 block ${
+                    isLight ? 'text-black hover:opacity-70' : 'text-hp-white'
+                  }`}
                 >
-                  <span className="link-hover">
+                  <span className={`link-hover ${isLight ? 'after:bg-hp-maroon after:shadow-none' : ''}`}>
                     {link.label}
                   </span>
                 </a>
@@ -61,14 +71,16 @@ export default function Navbar() {
             <button 
               onClick={toggleHUD}
               className={`hidden xl:block font-mono text-[9px] tracking-widest px-3 py-1.5 border transition-all duration-500 ${
-                hudActive ? 'bg-hp-maroon text-hp-white border-hp-maroon shadow-[0_0_15px_#4A0F1C]' : 'text-hp-white border-hp-white hover:border-hp-maroon hover:text-hp-maroon'
+                hudActive 
+                  ? isLight ? 'bg-black text-white border-black shadow-lg' : 'bg-hp-maroon text-hp-white border-hp-maroon shadow-[0_0_15px_#4A0F1C]' 
+                  : isLight ? 'text-black border-black/10 hover:border-hp-maroon hover:text-hp-maroon' : 'text-hp-white border-hp-white hover:border-hp-maroon hover:text-hp-maroon'
               }`}
             >
               STRUCTURAL [{hudActive ? 'ON' : 'OFF'}]
             </button>
 
             <Magnetic>
-              <a href="#contact" className="hidden sm:block btn-primary text-[10px] lg:text-xs py-2.5 px-4 lg:py-3 lg:px-6">
+              <a href="#contact" className={`${isLight ? '!bg-black !text-white' : ''} hidden sm:block btn-primary text-[10px] lg:text-xs py-2.5 px-4 lg:py-3 lg:px-6`}>
                 Start a Project →
               </a>
             </Magnetic>
@@ -78,8 +90,8 @@ export default function Navbar() {
               className="xl:hidden flex flex-col gap-[6px] p-2"
               aria-label="Open menu"
             >
-              <span className="block w-6 h-[1.5px] bg-hp-white" />
-              <span className="block w-4 h-[1.5px] bg-hp-white self-end" />
+              <span className={`block w-6 h-[1.5px] ${isLight ? 'bg-zinc-900' : 'bg-hp-white'}`} />
+              <span className={`block w-4 h-[1.5px] ${isLight ? 'bg-zinc-900' : 'bg-hp-white'} self-end`} />
             </button>
           </div>
         </div>

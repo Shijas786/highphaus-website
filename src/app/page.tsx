@@ -60,7 +60,6 @@ export default function Home() {
   
   return (
     <main className="bg-transparent min-h-screen">
-      {loaded && <Cursor />}
 
       <AnimatePresence mode="wait">
         {!loaded && (

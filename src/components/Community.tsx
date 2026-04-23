@@ -24,7 +24,7 @@ export default function Community() {
             className="space-y-8"
           >
             <div>
-              <p className="eyebrow !text-hp-maroon mb-4 tracking-[0.4em]">Community Angle</p>
+              <p className="eyebrow !text-hp-beige mb-4 tracking-[0.4em]">Community Angle</p>
               <h2 className="display-2 text-hp-white uppercase leading-[0.92]">
                 More than<br/>an agency
               </h2>

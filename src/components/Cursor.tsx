@@ -3,13 +3,15 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, useMotionValue, useSpring, AnimatePresence, useTransform } from 'framer-motion'
 import { useHUD } from '@/context/HUDContext'
+import { usePathname } from 'next/navigation'
 
 export default function Cursor() {
+  const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
   const { hudActive } = useHUD()
   
   const [cursorType, setCursorType] = useState('default')
-  const [bgContext, setBgContext] = useState('black')
+  const [bgContext, setBgContext] = useState<'black' | 'white' | 'maroon'>('black')
   
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -35,13 +37,22 @@ export default function Cursor() {
 
       const target = e.target as HTMLElement
       
-      // Determine background context from closest section
-      const section = target.closest('section')
-      if (section) {
-        if (section.classList.contains('bg-hp-white')) {
+      // HYPER-ROBUST THEME DETECTION
+      // 1. Check for specific dark/themed containers first (High Priority Overrides)
+      const themeContainer = target.closest('nav, button, a, .bg-hp-black, .bg-hp-maroon')
+      
+      if (themeContainer && (themeContainer.classList.contains('bg-hp-black') || themeContainer.tagName === 'NAV')) {
+        setBgContext('black')
+      } else if (themeContainer && themeContainer.classList.contains('bg-hp-maroon')) {
+        setBgContext('maroon')
+      } else if (pathname?.startsWith('/blog') || target.closest('.ms-blog-theme') || target.closest('.bg-white')) {
+        // 2. Force white theme on blog pages or white containers (Default for Blog)
+        setBgContext('white')
+      } else {
+        // 3. Fallback for other pages
+        const fallbackContainer = target.closest('section, main')
+        if (fallbackContainer && (fallbackContainer.classList.contains('bg-hp-white') || fallbackContainer.classList.contains('bg-white'))) {
           setBgContext('white')
-        } else if (section.classList.contains('bg-hp-maroon')) {
-          setBgContext('maroon')
         } else {
           setBgContext('black')
         }
@@ -72,7 +83,16 @@ export default function Cursor() {
       unsubscribeX()
       unsubscribeY()
     }
-  }, [mouseX, mouseY, roundedX, roundedY])
+  }, [mouseX, mouseY, roundedX, roundedY, pathname])
+
+  // Reset context on route change
+  useEffect(() => {
+    if (pathname?.startsWith('/blog')) {
+      setBgContext('white')
+    } else {
+      setBgContext('black')
+    }
+  }, [pathname])
 
   if (!mounted) return null
 
@@ -80,9 +100,12 @@ export default function Cursor() {
     return null
   }
 
-  // Adaptive Color Mappings for high contrast
-  const cursorColor = bgContext === 'white' ? '#4A0F1C' : '#FFFFFF' // Maroon or White
-  const ringColor = bgContext === 'white' ? 'rgba(74, 15, 28, 0.3)' : 'rgba(255, 255, 255, 0.3)'
+  const isBlogPage = pathname?.startsWith('/blog')
+  
+  // REFINED COLOR MAPPING (Synchronized with HighPhaus Visual Identity)
+  // Black on White background, White on Dark backgrounds
+  const cursorColor = (bgContext === 'white' || isBlogPage) ? '#000000' : '#FFFFFF' 
+  const ringColor = (bgContext === 'white' || isBlogPage) ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[99999]">
@@ -110,7 +133,9 @@ export default function Cursor() {
           y: mouseY, 
           backgroundColor: cursorColor 
         }}
-        className="absolute w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2 transition-colors duration-500"
+        className={`absolute w-2.5 h-2.5 rounded-full -translate-x-1/2 -translate-y-1/2 transition-colors duration-500 ${
+          (bgContext === 'white' || isBlogPage) ? 'shadow-none' : 'shadow-[0_0_10px_rgba(255,255,255,0.1)]'
+        }`}
       />
 
       {/* INTELLIGENT RING */}
@@ -121,11 +146,11 @@ export default function Cursor() {
           borderColor: ringColor 
         }}
         animate={{
-          width: cursorType === 'work' ? 120 : cursorType === 'pointer' ? 60 : 40,
-          height: cursorType === 'work' ? 120 : cursorType === 'pointer' ? 60 : 40,
+          width: cursorType === 'work' ? 120 : cursorType === 'pointer' ? 64 : 42,
+          height: cursorType === 'work' ? 120 : cursorType === 'pointer' ? 64 : 42,
         }}
-        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
-        className="absolute border rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transition-colors duration-500"
+        transition={{ type: 'spring', damping: 25, stiffness: 180 }}
+        className="absolute border-[1px] rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transition-colors duration-500"
       >
         <AnimatePresence>
           {cursorType === 'work' && (
@@ -133,7 +158,7 @@ export default function Cursor() {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              className="eyebrow text-[10px]"
+              className="eyebrow text-[10px] font-black"
               style={{ color: cursorColor }}
             >
               DRAG

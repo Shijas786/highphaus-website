@@ -4,10 +4,10 @@ import { BLOG_POSTS } from '@/lib/blog'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.highphaus.com'
 
-  const blogEntries: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+  const blogPosts = BLOG_POSTS.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: 'monthly',
+    lastModified: new URLSearchParams(post.date).get('date') || new Date(),
+    changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
 
@@ -15,40 +15,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'weekly',
       priority: 1,
     },
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    ...blogEntries,
-    // Section anchors
-    {
-      url: `${baseUrl}/#about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/#services`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/#work`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
+    ...blogPosts,
   ]
 }

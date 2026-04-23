@@ -1,0 +1,166 @@
+/* Premium Minimalist Blog (High-Fidelity Refinements) */
+
+.ms-blog-theme {
+  --hp-white: #ffffff;
+  --hp-black: #000000;
+  --hp-maroon: #4A0F1C;
+  --hp-gray: #71717a;
+  --hp-border: #f3f4f6;
+  
+  background-color: var(--hp-white);
+  color: var(--hp-black);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Subtle Grain Texture Overlay */
+.ms-blog-theme::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.ms-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Elevating the Header */
+.minimal-header {
+  padding: 100px 0 60px;
+  border-bottom: 1px solid var(--hp-border);
+  margin-bottom: 80px;
+  position: relative;
+}
+
+.minimal-title {
+  font-size: clamp(48px, 8vw, 92px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+/* Advanced Grid Layout */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+}
+
+@media (max-width: 1024px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Premium Card Interaction */
+.post-card {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.post-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--hp-border);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+}
+
+.post-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--hp-black);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.post-card:hover .post-image::after {
+  opacity: 0.1;
+}
+
+.post-title {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--hp-black);
+  letter-spacing: -0.03em;
+  transition: color 0.3s ease;
+}
+
+.post-card:hover .post-title {
+  color: var(--hp-maroon);
+}
+
+/* Featured Hero Section */
+.featured-spotlight {
+  margin-bottom: 120px;
+  border-bottom: 1px solid var(--hp-border);
+  padding-bottom: 120px;
+}
+
+.featured-image-large {
+  aspect-ratio: 21/9;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.1);
+}
+
+/* Structural Markings */
+.coord-tag {
+  font-family: 'Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--hp-maroon);
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+/* Reading Progress Bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--hp-maroon);
+  z-index: 1001;
+  width: 0%;
+}
+
+/* Microsoft Link with Animation */
+.ms-link {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--hp-maroon);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: gap 0.3s ease;
+}
+
+.ms-link:hover {
+  gap: 20px;
+}
+
+.ms-link::after {
+  content: '→';
+  font-size: 16px;
+}
